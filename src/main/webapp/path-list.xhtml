@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>PrimeFaces</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+            <h:form>
+                    <p:panel header="Paths"  styleClass="card">
+                <h:panelGrid columns="1" cellpadding="10">
+                    <p:dataTable var="path" value="#{pathController.paths}" rows="10"
+                                 paginator="true"
+                                 selectionMode="single"
+                                 rowKey="#{path.pathId}"
+                              
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15"
+                                 styleClass="header-right no-border">
+                        <p:column headerText="Id" style="width:70px;text-align: center;" sortBy="#{path.pathId}" >
+                            <h:outputText value="#{path.pathId}" style="text-align: center;" />
+                        </p:column>
+
+                        <p:column headerText="Year" style="text-align: center;">
+                            <h:outputText value="#{path.pathName}" style="text-align: center;"/>
+                        </p:column>
+                    </p:dataTable>
+
+                </h:panelGrid>
+            </p:panel> 
+</h:form>
+        </h:body>
+
+   
+</html>
+
+
