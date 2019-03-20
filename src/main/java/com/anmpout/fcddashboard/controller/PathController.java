@@ -4,15 +4,19 @@ package com.anmpout.fcddashboard.controller;
 
 import com.anmpout.fcddashboard.model.Path;
 import com.anmpout.fcddashboard.service.PathService;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.primefaces.event.SelectEvent;
 
 
 @ManagedBean(name="pathController")
@@ -38,10 +42,14 @@ private List<Path> paths;
         this.paths = paths;
     }
     
-//      public void onRowSelect(SelectEvent event) {
-//        FacesMessage msg = new FacesMessage("Car Selected", ((Path) event.getObject()).getPathId().toString());
-//        FacesContext.getCurrentInstance().addMessage(null, msg);
-//    }
+      public void onRowSelect(SelectEvent event) {
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/FCDDashboard/path-analytics.xhtml?id=100");
+        } catch (IOException ex) {
+            Logger.getLogger(PathController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
     
     
 }

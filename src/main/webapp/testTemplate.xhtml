@@ -6,11 +6,10 @@
                 template="/WEB-INF/templates/template.xhtml">
 
     <ui:define name="title">
-        A page title
+
     </ui:define>
 
     <ui:define name="description">
-        A page description
     </ui:define>
 
     <ui:define name="body">
@@ -26,6 +25,7 @@
                                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                  rowsPerPageTemplate="5,10,20"
                                  styleClass="header-right no-border">
+                        <p:ajax event="rowSelect" listener="#{pathController.onRowSelect}"/>
                         <p:column headerText="Id" style="width:70px;text-align: center;" sortBy="#{path.pathId}" >
                             <h:outputText value="#{path.pathId}" style="text-align: center;" />
                         </p:column>
