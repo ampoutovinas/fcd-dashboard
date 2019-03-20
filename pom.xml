@@ -15,6 +15,11 @@
     </properties>
     
     <dependencies>
+        <dependency>
+    <groupId>com.github.adminfaces</groupId>
+    <artifactId>admin-template</artifactId>
+    <version>1.0.0-RC21</version>
+</dependency>
 <dependency>
 	<groupId>org.primefaces.themes</groupId>
 	<artifactId>all-themes</artifactId>
