@@ -26,7 +26,9 @@ public class PathService implements PathDao  {
         private EntityManager entityManager;
     @Override
     public Path getPath(Integer pathId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       Query query = entityManager.createQuery("SELECT p FROM Path p where p.pathId=?1");
+       query.setParameter(1, pathId);
+        return (Path) query.getSingleResult();
     }
 
     @Override

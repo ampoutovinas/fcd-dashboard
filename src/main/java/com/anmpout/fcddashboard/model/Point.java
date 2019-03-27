@@ -30,7 +30,7 @@ public class Point implements Serializable {
     @Column(name = "LATITUDE")
     private Double latitude;
     
-        @Column(name = "LONGITUDE")
+    @Column(name = "LONGITUDE")
     private Double longitude;
 
 

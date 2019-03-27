@@ -39,7 +39,7 @@
                 }
                 .ui-panel .leaflet-container {
                     width: 100%;
-                    height: 400px
+                    height: 350px
                 }
             }
             @media (max-width: 768px) {
@@ -101,8 +101,15 @@
             <div class="ui-g" style="text-align: center;font-size: 1.2em">
                 <div class="ui-g-6">
                     <p:panel header="Paths Detail"  styleClass="card  box-fatal">
-                        <h:panelGrid columns="2" cellpadding="10">
-
+                        <h:panelGrid columns="2" cellpadding="10" columnClasses="ui-grid-col-4,ui-grid-col-8">
+                              <p:outputLabel  value="Id: " style="text-align: left;margin-bottom: 10px;"/>
+                              <p:outputLabel  value="#{pathDetailsController.pathId}" style="text-align: left;margin-bottom: 10px;"/>                              
+                              <p:outputLabel  value="Name: " style="text-align: left;margin-bottom: 10px;"/>
+                              <p:outputLabel  value="#{pathDetailsController.path.pathName}" style="text-align: left;margin-bottom: 10px;"/>
+                              <p:outputLabel  value="Region :" style="text-align: left;margin-bottom: 10px;"/>
+                              <p:outputLabel  value="#{pathDetailsController.region}" style="text-align: left;margin-bottom: 10px;"/>
+                              <p:outputLabel  value="Length :" style="text-align: left;margin-bottom: 10px;"/>
+                              <p:outputLabel  value="#{pathDetailsController.pathDistance}" style="text-align: left;margin-bottom: 10px;"/> 
                         </h:panelGrid>
                     </p:panel>
                 </div>
@@ -154,6 +161,7 @@
         <h:outputScript library="js" name="jquery-migrate-3.0.0.min.js"/>
         <h:outputScript library="js" name="monthpicker.min.js"/>
         <h:outputScript library="js" name="maskedinput.min.js"/>
+   
 
 <!--        <script type="text/javascript">
             $(document).ready(function () {
@@ -252,8 +260,8 @@
 //                }
                 function createMap() {
                     console.log("createMap");
-                    map.addLayer(pageViewsLayer);
-                    L.control.layers(baseLayers, overlays).addTo(map);
+                   // map.addLayer(pageViewsLayer);
+                  //  L.control.layers(baseLayers, overlays).addTo(map);
                    // var data = #{analyticsMB.pageViewsGeoJson};
 //                    var geoJsonPageViewsLayer = L.geoJson(data, {
 //                        pointToLayer: function (feature, latlng) {
@@ -271,6 +279,20 @@
 //                    if(pageViewsLayer.getBounds().isValid()) {
 //                        map.fitBounds(pageViewsLayer.getBounds());
 //                    }
+        var pointA = new L.LatLng(28.635308, 77.22496);
+        var pointB = new L.LatLng(28.984461, 77.70641);
+        var pointList = [pointA, pointB];
+
+        var firstpolyline = new L.Polyline(pointList, {
+            color: 'red',
+            weight: 3,
+            opacity: 0.5,
+            smoothFactor: 1
+        });
+        firstpolyline.addTo(map);
+        // zoom the map to the polyline
+        map.fitBounds(firstpolyline.getBounds());
+          console.log("polyline");
                     function markerOnClick(e) {
                         map.panTo(new L.LatLng(e.latlng.lat, e.latlng.lng));
                     }

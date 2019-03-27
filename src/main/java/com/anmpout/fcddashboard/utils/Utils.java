@@ -28,4 +28,21 @@ public class Utils implements Serializable {
         }
         Messages.add(null, facesMessage);
     }
+    public static Double convertMetersToKm(Double meters){
+        Double returnKm =0.0;
+        returnKm = meters * 0.001;
+        
+        
+    return (int)Math.round(returnKm * 100)/(double)100;
+    }
+    
+//        private String createPathJSONString() {
+//        String jsonString = "";
+//        JSONA
+//        for
+//        
+//        
+//        return jsonString;
+//
+//    }
 }
