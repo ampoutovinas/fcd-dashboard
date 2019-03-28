@@ -164,21 +164,25 @@
                     <p:panel styleClass="card" >
                         <div class="row" style="text-align: left;font-size: 1.2em">
                             <div class="ui-g-12">
-                                <p:outputLabel for="month" value="Select Month" style="margin-left: 20px; margin-right: 20px;" />
-                                <p:datePicker id="month" view="month" value="#{pathDetailsController.month}" pattern="MM/yyyy" yearNavigator="true" yearRange="2017:2030" />
+                                <p:outputLabel for="day" value="Select Day" style="margin-left: 20px; margin-right: 20px;" />
+                                <p:calendar id="day" value="#{pathDetailsController.day}" >
+                         
+                                </p:calendar>
+         
                                 <p:commandButton value="Show" id="withIcon" action="#{pathDetailsController.buttonAction}"
                                                  update="dailyStats" style="margin-right:20px; margin-left: 20px;"
-                                                 icon="fa fa-bar-chart" styleClass="btn-primary"/>
+                                                 icon="fa fa-bar-chart" styleClass="btn-primary" disabled="#{pathDetailsController.enableSelectDayButton}"/>
+                
                             </div>
                         </div>
                         <p:outputPanel id="dailyStats" style=" border-style: none;" >
                             <p:panel  rendered="#{pathDetailsController.showDailyStatistics}" style=" border-style: none;" >  
                                 <div class="row" style="text-align: left;font-size: 1.2em">
                                     <div class="ui-lg-6 ui-g-12">
-                                        <p:chart type="bar" model="#{pathDetailsController.speed}" style="height:400px" />
+                                     <p:lineChart model="#{pathDetailsController.speed}" style= "height: 400px;"/>
                                     </div>
                                     <div class="ui-lg-6 ui-g-12">
-                                        <p:barChart model="#{pathDetailsController.count}" style="height: 400px;"/>
+                                     <p:lineChart model="#{pathDetailsController.time}" style= "height: 400px;"/>
                                     </div>
                                 </div>
                                 <div class="row" style="text-align: left;font-size: 1.2em">
@@ -186,7 +190,7 @@
                                         <p:barChart model="#{pathDetailsController.count}" style="height: 400px;"/>
                                     </div>
                                         <div class="ui-lg-6 ui-g-12">
-                                        <p:chart type="bar" model="#{pathDetailsController.speed}" style="height:400px" />
+                                     
                                     </div>
                                 </div>
                             </p:panel>  
@@ -198,6 +202,7 @@
                 <p:tab title="Statistics per Month">
                     <h:panelGrid columns="2" cellpadding="10">
                         <p:graphicImage name="demo/images/godfather/godfather2.jpg" />
+                                        <p:datePicker id="month" view="month" value="#{pathDetailsController.month}" pattern="MM/yyyy" yearNavigator="true" yearRange="2017:2030" />
                         <h:outputText value="Francis Ford Coppola's legendary continuation and sequel to his landmark 1972 film, The_Godfather, parallels the young Vito Corleone's rise with his son Michael's spiritual fall, deepening The_Godfather's depiction of the dark side of the American dream. 
                                       In the early 1900s, the child Vito flees his Sicilian village for America after the local Mafia kills his family. Vito struggles to make a living, legally or illegally, for his wife and growing brood in Little Italy, 
                                       killing the local Black Hand Fanucci after he demands his customary cut of the tyro's business. With Fanucci gone, Vito's communal stature grows." />
