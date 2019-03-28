@@ -33,5 +33,29 @@ public class Point implements Serializable {
     @Column(name = "LONGITUDE")
     private Double longitude;
 
+    public void setPointId(Integer pointId) {
+        this.pointId = pointId;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Integer getPointId() {
+        return pointId;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
 
 }

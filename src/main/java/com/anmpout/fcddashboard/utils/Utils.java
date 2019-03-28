@@ -5,10 +5,15 @@
  */
 package com.anmpout.fcddashboard.utils;
 
+import com.anmpout.fcddashboard.model.Point;
 import java.io.Serializable;
+import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.application.FacesMessage;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.omnifaces.util.Messages;
+
 
 /**
  *
@@ -35,14 +40,20 @@ public class Utils implements Serializable {
         
     return (int)Math.round(returnKm * 100)/(double)100;
     }
+
+    public static String createPathJSONString(List<Point> points) {
+        String jsonString = "";
+         JSONObject jSONObject =  new JSONObject();
+          JSONArray pointArray = new JSONArray();
+        for (Point point:points){
+            JSONArray tmpArray = new JSONArray();
+            tmpArray.put(point.getLatitude());
+            tmpArray.put(point.getLongitude());
+            pointArray.put(tmpArray);
+        }
+        jSONObject.put("points", pointArray);
+        
+        return jSONObject.toString();
+    }
     
-//        private String createPathJSONString() {
-//        String jsonString = "";
-//        JSONA
-//        for
-//        
-//        
-//        return jsonString;
-//
-//    }
 }
