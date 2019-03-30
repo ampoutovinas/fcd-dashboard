@@ -7,6 +7,8 @@ package com.anmpout.fcddashboard.utils;
 
 import com.anmpout.fcddashboard.model.Point;
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.application.FacesMessage;
@@ -55,5 +57,11 @@ public class Utils implements Serializable {
         
         return jSONObject.toString();
     }
-    
+        public static Date addDays(Date date, int days)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days); //minus number would decrement the days
+        return cal.getTime();
+    }
 }

@@ -97,6 +97,11 @@
     </ui:define>
 
     <ui:define name="body">
+        <h:form id="crowl">
+                           <p:growl showDetail="true" life="3000" severity="info,warn,error,fatal">
+                    <p:autoUpdate/>
+                </p:growl>
+               </h:form>
         <h:form>
             <p:remoteCommand name="updateStatistics" action="#{pathDetailsController.updateStatistics}"
                              process="@form"
@@ -165,13 +170,14 @@
                         <div class="row" style="text-align: left;font-size: 1.2em">
                             <div class="ui-g-12">
                                 <p:outputLabel for="day" value="Select Day" style="margin-left: 20px; margin-right: 20px;" />
-                                <p:calendar id="day" value="#{pathDetailsController.day}" >
+                                <p:calendar id="day" value="#{pathDetailsController.day}" mindate="01/01/2018" maxdate="30/01/2018" pattern="dd/MM/yyyy" >
                          
                                 </p:calendar>
          
-                                <p:commandButton value="Show" id="withIcon" action="#{pathDetailsController.buttonAction}"
-                                                 update="dailyStats" style="margin-right:20px; margin-left: 20px;"
-                                                 icon="fa fa-bar-chart" styleClass="btn-primary" disabled="#{pathDetailsController.enableSelectDayButton}"/>
+                                <p:commandButton value="Show" id="withIcon" action="#{pathDetailsController.buttonAction()}"
+                                                 update="crowl dailyStats" style="margin-right:20px; margin-left: 20px;"
+                                                 icon="fa fa-bar-chart" styleClass="btn-primary" disabled="#{pathDetailsController.enableSelectDayButton}"
+                                                 onclick="showBar()" />
                 
                             </div>
                         </div>

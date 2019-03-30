@@ -5,11 +5,13 @@
  */
 package com.anmpout.fcddashboard.controller;
 
+import com.anmpout.fcddashboard.model.FilterData;
 import com.anmpout.fcddashboard.model.Path;
 import com.anmpout.fcddashboard.service.PathService;
 import com.anmpout.fcddashboard.utils.Utils;
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,9 +20,12 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import org.omnifaces.util.Messages;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.charts.line.LineChartModel;
 import org.primefaces.model.charts.ChartData;
@@ -58,14 +63,26 @@ public class PathDetailsController implements Serializable {
     private static final SimpleDateFormat MONTH_YEAR_FORMAT = new SimpleDateFormat("MM/yyyy");
     private boolean showDailyStatistics = false;
     private boolean showMonthlyStatistics = false;
-     private boolean enableSelectDayButton = false; 
+     private boolean enableSelectDayButton = false;
+     List<String> dayLabels; 
+     List<Number> daySpeedvalues;
+     List<Number> dayTimevalues;
+     List<Number> dayCountvalues;
+     private List<FilterData> dayData;
+     private String detactionDayColor = "rgb(242,109,33)";
+     private String speedDayColor = "rgb(75, 192, 192)";
+     private String travelTimeDayColor = "rgb(154, 38, 23)";
+     //private String travelTimeDayColor ="rgb (154,38,23)";
        
           @PostConstruct
     public void init() {
         showDailyStatistics = false;
         showMonthlyStatistics = false;
         enableSelectDayButton = false;
-        pathId=1;
+        dayLabels = new ArrayList<>();
+        daySpeedvalues =new ArrayList<>();
+        dayTimevalues = new ArrayList<>();
+        dayCountvalues = new ArrayList<>();
         pathDistance="";
         region="";
         pathJSONString="";
@@ -77,10 +94,9 @@ public class PathDetailsController implements Serializable {
        path = service1.getPath(pathId);
        setupFields();
        pathJSONString = Utils.createPathJSONString(path.getPoints());
-         createBarModel2();
-        // createLineModel();
          speed = new LineChartModel();
          time = new LineChartModel();
+         count = new BarChartModel();
     }
 
     public boolean isEnableSelectDayButton() {
@@ -90,9 +106,6 @@ public class PathDetailsController implements Serializable {
     public void setEnableSelectDayButton(boolean enableSelectDayButton) {
         this.enableSelectDayButton = enableSelectDayButton;
     }
-
-
-
 
     public Path getPath() {
         return path;
@@ -231,76 +244,30 @@ public class PathDetailsController implements Serializable {
         this.showMonthlyStatistics = showMonthlyStatistics;
     }
     
-    public void createBarModel2() {
+    public void createBarModelDayCount(List<String> labels,List<Number> values) {
     count = new org.primefaces.model.charts.bar.BarChartModel();
     ChartData data = new ChartData();
 
     org.primefaces.model.charts.bar.BarChartDataSet barDataSet = new org.primefaces.model.charts.bar.BarChartDataSet();
-    barDataSet.setLabel("My First Dataset");
+    barDataSet.setLabel("Detactions");
 
-    List<Number> values = new ArrayList<>();
-    values.add(65);
-    values.add(59);
-    values.add(80);
-    values.add(81);
-    values.add(56);
-    values.add(55);
-    values.add(40);
-    values.add(65);
-    values.add(59);
-    values.add(80);
-    values.add(81);
-    values.add(56);
-    values.add(55);
-    values.add(40);
-    values.add(65);
-    values.add(59);
-    values.add(80);
-    values.add(81);
-    values.add(56);
-    values.add(55);
-    values.add(40);
-    values.add(56);
-    values.add(55);
-    values.add(40);
     barDataSet.setData(values);
 
     List<String> bgColor = new ArrayList<>();
-    bgColor.add("rgb(255, 99, 132, 0.8)");
-    // barDataSet.setBackgroundColor(bgColor);
-
     List<String> borderColor = new ArrayList<>();
-    borderColor.add("rgb(255, 99, 132)");
-    // barDataSet.setBorderColor(borderColor);
-    barDataSet.setBorderWidth(1);
+    for(int i=0;i<values.size();i++){
+    bgColor.add(detactionDayColor);
+    borderColor.add(detactionDayColor);
+    }
+    // 
+
+    
+
+        barDataSet.setBackgroundColor(bgColor);
+        barDataSet.setBorderColor(borderColor);
+        barDataSet.setBorderWidth(1);
 
     data.addChartDataSet(barDataSet);
-
-    List<String> labels = new ArrayList<>();
-    labels.add("00");
-    labels.add("01");
-    labels.add("02");
-    labels.add("03");
-    labels.add("04");
-    labels.add("05");
-    labels.add("06");
-    labels.add("07");
-    labels.add("08");
-    labels.add("09");
-    labels.add("10");
-    labels.add("11");
-    labels.add("12");
-    labels.add("13");
-    labels.add("14");
-    labels.add("15");
-    labels.add("16");
-    labels.add("17");
-    labels.add("18");
-    labels.add("19");
-    labels.add("20");
-    labels.add("21");
-    labels.add("22");
-    labels.add("23");
     data.setLabels(labels);
     count.setData(data);
 
@@ -314,74 +281,147 @@ public class PathDetailsController implements Serializable {
     cScales.addYAxesData(linearAxes);
     options.setScales(cScales);
 
-    Title title = new Title();
-    title.setDisplay(true);
-    title.setText("Bar Chart");
-    options.setTitle(title);
+//    Title title = new Title();
+//    title.setDisplay(true);
+//    title.setText("Bar Chart");
+//    options.setTitle(title);
 
-    Legend legend = new Legend();
-    legend.setDisplay(true);
-    legend.setPosition("top");
-    LegendLabel legendLabels = new LegendLabel();
-    legendLabels.setFontStyle("bold");
-    legendLabels.setFontColor("#2980B9");
-    legendLabels.setFontSize(24);
-    legend.setLabels(legendLabels);
-    options.setLegend(legend);
+//    Legend legend = new Legend();
+//    legend.setDisplay(true);
+//    legend.setPosition("top");
+//    LegendLabel legendLabels = new LegendLabel();
+//    legendLabels.setFontStyle("bold");
+//    legendLabels.setFontColor("#2980B9");
+//    legendLabels.setFontSize(24);
+//    legend.setLabels(legendLabels);
+//    options.setLegend(legend);
 
     count.setOptions(options);
     }
 
     public void buttonAction() {
+        if(day==null){
+            PrimeFaces.current().executeScript("hideBar();");  
+       Utils.addDetailMessage("Please select a day!",FacesMessage.SEVERITY_ERROR);
+        }else{
+      //PrimeFaces.current().executeScript("showBar();");
+      Long timestampFrom = (Long) day.getTime()/1000;
+      Long timestampTo  = (Long) Utils.addDays(day, 1).getTime()/1000;
+      dayData = service1.getDayData(100,timestampFrom,timestampTo);
+     
+      if(dayData.isEmpty()){
+      Utils.addDetailMessage("There are not available data for this path and  this time window!",FacesMessage.SEVERITY_WARN);
+      return;
+      }
+      dayLabels = prepareDayLabels(dayData);
+      dayCountvalues = prepareDayCountValues(dayData);
+      daySpeedvalues =  prepareDaySpeedValues(dayData);
+      dayTimevalues = prepareDayTimeValues(dayData);
+      createBarModelDayCount(dayLabels,dayCountvalues);
+      createLineModelDaySpeed(dayLabels,daySpeedvalues);
+      createLineModelDayTime(dayLabels,dayTimevalues);
+      PrimeFaces.current().executeScript("hideBar();"); 
       showDailyStatistics = true;
     }
+    }
+    
     public void onDaySelect(SelectEvent event) {
         enableSelectDayButton = false;
 
     }
             
-        public void createLineModel() {
+   public void createLineModelDaySpeed(List<String> labels,List<Number>values) {
         speed = new LineChartModel();
-         time = new LineChartModel();
         ChartData data = new ChartData();
          
         LineChartDataSet dataSet = new LineChartDataSet();
-        List<Number> values = new ArrayList<>();
-        values.add(65);
-        values.add(59);
-        values.add(80);
-        values.add(81);
-        values.add(56);
-        values.add(55);
-        values.add(40);
         dataSet.setData(values);
         dataSet.setFill(false);
-        dataSet.setLabel("My First Dataset");
-        dataSet.setBorderColor("rgb(75, 192, 192)");
+        dataSet.setLabel("Speed");
+        dataSet.setBorderColor(speedDayColor);
+        dataSet.setBackgroundColor(speedDayColor);
         dataSet.setLineTension(0.1);
         data.addChartDataSet(dataSet);
          
-        List<String> labels = new ArrayList<>();
-        labels.add("January");
-        labels.add("February");
-        labels.add("March");
-        labels.add("April");
-        labels.add("May");
-        labels.add("June");
-        labels.add("July");
         data.setLabels(labels);
          
         //Options
         LineChartOptions options = new LineChartOptions();        
-        Title title = new Title();
-        title.setDisplay(true);
-        title.setText("Line Chart");
-        options.setTitle(title);
+//        Title title = new Title();
+//        title.setDisplay(true);
+//        title.setText("Line Chart");
+//        options.setTitle(title);
          
         speed.setOptions(options);
         speed.setData(data);
+       
+    }
+   
+   public void createLineModelDayTime(List<String> labels,List<Number>values) {
+        time = new LineChartModel();
+        ChartData data = new ChartData();
+         
+        LineChartDataSet dataSet = new LineChartDataSet();
+        dataSet.setData(values);
+        dataSet.setFill(false);
+        dataSet.setLabel("Travel Time");
+        dataSet.setBorderColor(travelTimeDayColor);
+        dataSet.setBackgroundColor(travelTimeDayColor);
+        dataSet.setLineTension(0.1);
+        data.addChartDataSet(dataSet);
+         
+        data.setLabels(labels);
+         
+        //Options
+        LineChartOptions options = new LineChartOptions();        
+//        Title title = new Title();
+//        title.setDisplay(true);
+//        title.setText("Line Chart");
+//        options.setTitle(title);
+         
         time.setOptions(options);
         time.setData(data);
        
+    }
+
+    private List<String> prepareDayLabels(List<FilterData> dayData) {
+              List<String> labels = new ArrayList<>();
+              for(FilterData fd :dayData){
+              Date date=new Date(fd.getTimestamp()*1000);
+                 DateFormat df2 = new SimpleDateFormat("HH:mm");
+                 String label = df2.format(date);
+                 labels.add(label);
+              
+              }
+        return labels;
+    }
+
+    private List<Number> prepareDayCountValues(List<FilterData> dayData) {
+              List<Number> counts = new ArrayList<>();
+              for(FilterData fd :dayData){
+                 counts.add(fd.getCount());
+              
+              }
+        return counts;
+
+    }
+
+    private List<Number> prepareDaySpeedValues(List<FilterData> dayData) {
+              List<Number> speeds = new ArrayList<>();
+              for(FilterData fd :dayData){
+                 speeds.add(fd.getSpeed());
+              
+              }
+        return speeds; 
+    }
+
+    private List<Number> prepareDayTimeValues(List<FilterData> dayData) {
+              List<Number> times = new ArrayList<>();
+              for(FilterData fd :dayData){
+                 times.add(fd.getTime());
+              
+              }
+        return times;
+
     }
 }

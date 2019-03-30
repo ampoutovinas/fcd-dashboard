@@ -6,6 +6,7 @@
 package com.anmpout.fcddashboard.dao;
 
 
+import com.anmpout.fcddashboard.model.FilterData;
 import com.anmpout.fcddashboard.model.Path;
 import java.util.List;
 import javax.ejb.Remote;
@@ -21,5 +22,6 @@ public interface PathDao {
     
     public List<Path> getAllPaths();
     public List<Path> getAllRegionPaths(Integer regionId);
+    public List<FilterData> getDayData(Integer pathId,Long timestampFrom, Long timestampTo);
     
 }

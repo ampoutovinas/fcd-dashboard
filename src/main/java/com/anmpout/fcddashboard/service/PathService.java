@@ -7,6 +7,7 @@ package com.anmpout.fcddashboard.service;
 
 
 import com.anmpout.fcddashboard.dao.PathDao;
+import com.anmpout.fcddashboard.model.FilterData;
 import com.anmpout.fcddashboard.model.Path;
 import java.util.List;
 import javax.ejb.LocalBean;
@@ -43,5 +44,13 @@ public class PathService implements PathDao  {
            query.setParameter(1, regionId);
         return query.getResultList();   
     }
+    @Override
+    public List<FilterData> getDayData(Integer pathId,Long timestampFrom, Long timestampTo) {
+           Query query = entityManager.createQuery("SELECT t FROM FilterData t WHERE t.pathId=?1"
+                   + " AND t.timestamp>=?2 AND t.timestamp < ?3 ORDER BY t.timestamp");
+            query.setParameter(1, pathId);
+            query.setParameter(2, timestampFrom);
+            query.setParameter(3, timestampTo);
+        return query.getResultList();     }
     
 }

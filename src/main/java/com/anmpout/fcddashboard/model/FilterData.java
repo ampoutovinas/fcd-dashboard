@@ -34,7 +34,7 @@ private Integer  count;
 private Double  speed;
 
 @Column(name = "TIME")
-private Integer  TIME;
+private Integer  time;
 
 
     public Integer getPathId() {
@@ -69,12 +69,14 @@ private Integer  TIME;
         this.speed = speed;
     }
 
-    public Integer getTIME() {
-        return TIME;
+    public Integer getTime() {
+        return time;
     }
 
-    public void setTIME(Integer TIME) {
-        this.TIME = TIME;
+    public void setTime(Integer time) {
+        this.time = time;
     }
+
+
     
 }
