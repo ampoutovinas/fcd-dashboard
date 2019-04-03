@@ -8,7 +8,12 @@ package com.anmpout.fcddashboard.service;
 
 import com.anmpout.fcddashboard.dao.PathDao;
 import com.anmpout.fcddashboard.model.FilterData;
+import com.anmpout.fcddashboard.model.MonthData;
 import com.anmpout.fcddashboard.model.Path;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
@@ -52,5 +57,45 @@ public class PathService implements PathDao  {
             query.setParameter(2, timestampFrom);
             query.setParameter(3, timestampTo);
         return query.getResultList();     }
+    
+        @Override
+    public List<MonthData> getMonthData(Integer pathId,Integer month,Integer year) {
+        List<MonthData>  returnList = new ArrayList<>();
+       List<Object[]> results  = entityManager.createNativeQuery("SELECT "
+               + "T.PATH_ID,T.DAY,T.MONTH,T.YEAR,AVG(T.TIME),MAX(T.TIME),MIN(T.TIME),"
+               + "AVG(T.COUNT),MAX(T.COUNT),MIN(T.COUNT),AVG(T.SPEED),MAX(T.SPEED),"
+               + "MIN(T.SPEED) FROM FILTER_DATA T WHERE T.PATH_ID = ?1 AND T.MONTH = ?2 AND T.YEAR = ?3 "
+                + " GROUP BY T.PATH_ID,T.DAY,T.MONTH,T.YEAR ORDER BY T.PATH_ID,T.DAY,T.MONTH,T.YEAR")
+                .setParameter(1, pathId)
+                .setParameter(2, month)
+                .setParameter(3, year).getResultList();
+            
+        results.stream().forEach((record) -> {
+            MonthData tmpData = new MonthData();
+                tmpData.setPathId((Integer) record[0]);
+                tmpData.setDay((Integer) record[1]);
+                tmpData.setMonth((Integer) record[2]);
+                tmpData.setYear((Integer) record[3]);
+                tmpData.setTime(((BigDecimal) record[4]).intValue());
+                tmpData.setMaxTime((Integer) record[5]);
+                tmpData.setMinTime((Integer) record[6]);
+                tmpData.setCount(((BigDecimal) record[7]).intValue());
+                tmpData.setMaxCount((Integer) record[8]);
+                tmpData.setMinCount((Integer) record[9]);
+                tmpData.setSpeed(((Double) record[10]));
+                tmpData.setMaxSpeed(((Double) record[11]));
+                tmpData.setMinSpeed(((Double) record[12]));
+                 returnList.add(tmpData);
+        });
+
+        return new ArrayList<>();
+    }
+    
+    
+//    SELECT  T.PATH_ID,T.DAY,T.MONTH,T.YEAR,AVG(T.TIME),
+//    MAX(T.TIME),MIN(T.TIME),AVG(T.COUNT),MAX(T.COUNT),MIN(T.COUNT),AVG(T.SPEED),MAX(T.SPEED),MIN(T.SPEED) FROM FILTER_DATA T
+//WHERE T.PATH_ID = 100 AND T.MONTH = 04 AND T.YEAR = 2018 
+// GROUP BY T.PATH_ID,T.DAY,T.MONTH,T.YEAR
+//ORDER BY T.PATH_ID,T.DAY,T.MONTH,T.YEAR;
     
 }

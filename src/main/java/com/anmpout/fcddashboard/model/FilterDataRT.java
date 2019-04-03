@@ -18,8 +18,8 @@ import javax.persistence.Table;
  */
 @Entity
 @IdClass(FilterDataKey.class)
-@Table(name = "FILTER_DATA")
-public class FilterData implements Serializable{
+@Table(name = "FILTER_DATA_RT")
+public class FilterDataRT implements Serializable{
 @Id
 @Column(name = "PATH_ID")
 private Integer pathId;
@@ -145,3 +145,4 @@ private Integer  year;
 
     
 }
+

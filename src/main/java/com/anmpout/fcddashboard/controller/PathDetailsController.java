@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import javafx.scene.control.Tooltip;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -32,7 +33,9 @@ import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.axes.cartesian.CartesianScales;
 import org.primefaces.model.charts.axes.cartesian.linear.CartesianLinearAxes;
 import org.primefaces.model.charts.axes.cartesian.linear.CartesianLinearTicks;
+import org.primefaces.model.charts.bar.BarChartDataSet;
 import org.primefaces.model.charts.bar.BarChartModel;
+import org.primefaces.model.charts.bar.BarChartOptions;
 import org.primefaces.model.charts.line.LineChartDataSet;
 import org.primefaces.model.charts.line.LineChartOptions;
 import org.primefaces.model.charts.optionconfig.legend.Legend;
@@ -58,20 +61,34 @@ public class PathDetailsController implements Serializable {
     private Date month;
     private Date day;
     private BarChartModel count;
+    private BarChartModel minMax;
     private LineChartModel speed;
     private LineChartModel time;
+    private LineChartModel speedMedian;
+    private BarChartModel countMonthly;
+    private BarChartModel minMaxMonthly;
+    private LineChartModel speedMonthly;
+    private LineChartModel timeMonthly;
+    private LineChartModel speedMedianMonthly;
     private static final SimpleDateFormat MONTH_YEAR_FORMAT = new SimpleDateFormat("MM/yyyy");
     private boolean showDailyStatistics = false;
     private boolean showMonthlyStatistics = false;
      private boolean enableSelectDayButton = false;
+     private boolean enableSelectMonthButton = false;
+     
      List<String> dayLabels; 
-     List<Number> daySpeedvalues;
-     List<Number> dayTimevalues;
-     List<Number> dayCountvalues;
+     List<Number> daySpeedValues;
+     List<Number> dayTimeValues;
+     List<Number> dayCountValues;
+     List<Number> dayMedianSpeedValues;
+     List<Number> daySpeedMinValues;
+     List<Number> daySpeedMaxValues;
      private List<FilterData> dayData;
      private String detactionDayColor = "rgb(242,109,33)";
      private String speedDayColor = "rgb(75, 192, 192)";
      private String travelTimeDayColor = "rgb(154, 38, 23)";
+     private String speedMedianDayColor = "rgb(210, 216, 63)";
+     
      //private String travelTimeDayColor ="rgb (154,38,23)";
        
           @PostConstruct
@@ -79,10 +96,14 @@ public class PathDetailsController implements Serializable {
         showDailyStatistics = false;
         showMonthlyStatistics = false;
         enableSelectDayButton = false;
+        enableSelectMonthButton = false;
         dayLabels = new ArrayList<>();
-        daySpeedvalues =new ArrayList<>();
-        dayTimevalues = new ArrayList<>();
-        dayCountvalues = new ArrayList<>();
+        daySpeedValues =new ArrayList<>();
+        dayTimeValues = new ArrayList<>();
+        dayCountValues = new ArrayList<>();
+        dayMedianSpeedValues = new ArrayList<>();
+        daySpeedMinValues = new ArrayList<>();
+        daySpeedMaxValues = new ArrayList<>();
         pathDistance="";
         region="";
         pathJSONString="";
@@ -97,6 +118,13 @@ public class PathDetailsController implements Serializable {
          speed = new LineChartModel();
          time = new LineChartModel();
          count = new BarChartModel();
+         minMax = new BarChartModel();
+         speedMedian = new LineChartModel();
+        countMonthly =  new BarChartModel();;
+        minMaxMonthly =  new BarChartModel();;
+        speedMonthly= new LineChartModel();;
+        timeMonthly= new LineChartModel();;
+        speedMedianMonthly= new LineChartModel();;
     }
 
     public boolean isEnableSelectDayButton() {
@@ -106,6 +134,15 @@ public class PathDetailsController implements Serializable {
     public void setEnableSelectDayButton(boolean enableSelectDayButton) {
         this.enableSelectDayButton = enableSelectDayButton;
     }
+
+    public boolean isEnableSelectMonthButton() {
+        return enableSelectMonthButton;
+    }
+
+    public void setEnableSelectMonthButton(boolean enableSelectMonthButton) {
+        this.enableSelectMonthButton = enableSelectMonthButton;
+    }
+    
 
     public Path getPath() {
         return path;
@@ -202,6 +239,46 @@ public class PathDetailsController implements Serializable {
     public void setTime(LineChartModel time) {
         this.time = time;
     }
+
+    public BarChartModel getCountMonthly() {
+        return countMonthly;
+    }
+
+    public void setCountMonthly(BarChartModel countMonthly) {
+        this.countMonthly = countMonthly;
+    }
+
+    public BarChartModel getMinMaxMonthly() {
+        return minMaxMonthly;
+    }
+
+    public void setMinMaxMonthly(BarChartModel minMaxMonthly) {
+        this.minMaxMonthly = minMaxMonthly;
+    }
+
+    public LineChartModel getSpeedMonthly() {
+        return speedMonthly;
+    }
+
+    public void setSpeedMonthly(LineChartModel speedMonthly) {
+        this.speedMonthly = speedMonthly;
+    }
+
+    public LineChartModel getTimeMonthly() {
+        return timeMonthly;
+    }
+
+    public void setTimeMonthly(LineChartModel timeMonthly) {
+        this.timeMonthly = timeMonthly;
+    }
+
+    public LineChartModel getSpeedMedianMonthly() {
+        return speedMedianMonthly;
+    }
+
+    public void setSpeedMedianMonthly(LineChartModel speedMedianMonthly) {
+        this.speedMedianMonthly = speedMedianMonthly;
+    }
     
     
     
@@ -243,6 +320,25 @@ public class PathDetailsController implements Serializable {
     public void setShowMonthlyStatistics(boolean showMonthlyStatistics) {
         this.showMonthlyStatistics = showMonthlyStatistics;
     }
+    
+    
+    public LineChartModel getSpeedMedian() {
+        return speedMedian;
+    }
+
+    public void setSpeedMedian(LineChartModel speedMedian) {
+        this.speedMedian = speedMedian;
+    }
+
+    public BarChartModel getMinMax() {
+        return minMax;
+    }
+
+    public void setMinMax(BarChartModel minMax) {
+        this.minMax = minMax;
+    }
+    
+    
     
     public void createBarModelDayCount(List<String> labels,List<Number> values) {
     count = new org.primefaces.model.charts.bar.BarChartModel();
@@ -314,12 +410,17 @@ public class PathDetailsController implements Serializable {
       return;
       }
       dayLabels = prepareDayLabels(dayData);
-      dayCountvalues = prepareDayCountValues(dayData);
-      daySpeedvalues =  prepareDaySpeedValues(dayData);
-      dayTimevalues = prepareDayTimeValues(dayData);
-      createBarModelDayCount(dayLabels,dayCountvalues);
-      createLineModelDaySpeed(dayLabels,daySpeedvalues);
-      createLineModelDayTime(dayLabels,dayTimevalues);
+      dayCountValues = prepareDayCountValues(dayData);
+      daySpeedValues =  prepareDaySpeedValues(dayData);
+      dayTimeValues = prepareDayTimeValues(dayData);
+      dayMedianSpeedValues = prepareDaySpeedMedianValues(dayData);
+       daySpeedMinValues = prepareDaySpeedMinValues(dayData);
+       daySpeedMaxValues = prepareDaySpeedMaxValues(dayData);
+      createBarModelDayCount(dayLabels,dayCountValues);
+      createLineModelDaySpeed(dayLabels,daySpeedValues);
+      createLineModelDayTime(dayLabels,dayTimeValues);
+      createLineModelDayMedianSpeed(dayLabels,dayMedianSpeedValues);
+      createminMaxBarModel(dayLabels,daySpeedMinValues,daySpeedMaxValues);
       PrimeFaces.current().executeScript("hideBar();"); 
       showDailyStatistics = true;
     }
@@ -424,4 +525,148 @@ public class PathDetailsController implements Serializable {
         return times;
 
     }
+
+    private List<Number> prepareDaySpeedMedianValues(List<FilterData> dayData) {
+              List<Number> medianSpeedValues = new ArrayList<>();
+              for(FilterData fd :dayData){
+                 medianSpeedValues.add(fd.getMedianSpeed());
+              
+              }
+        return medianSpeedValues; 
+    }
+    
+        private List<Number> prepareDaySpeedMinValues(List<FilterData> dayData) {
+              List<Number> minSpeeds = new ArrayList<>();
+              for(FilterData fd :dayData){
+                 minSpeeds.add(fd.getMinSpeed());
+              
+              }
+        return minSpeeds;
+    
+        }
+
+    private List<Number> prepareDaySpeedMaxValues(List<FilterData> dayData) {
+              List<Number> maxSpeeds = new ArrayList<>();
+              for(FilterData fd :dayData){
+                 maxSpeeds.add(fd.getMaxSpeed());
+              
+              }
+        return maxSpeeds;
+    }
+
+    private void createLineModelDayMedianSpeed(List<String> labels, List<Number> values) {
+        speedMedian = new LineChartModel();
+        ChartData data = new ChartData();
+         
+        LineChartDataSet dataSet = new LineChartDataSet();
+        dataSet.setData(values);
+        dataSet.setFill(false);
+        dataSet.setLabel("Median");
+        dataSet.setBorderColor(speedMedianDayColor);
+        dataSet.setBackgroundColor(speedMedianDayColor);
+        dataSet.setLineTension(0.1);
+        data.addChartDataSet(dataSet);
+         
+        data.setLabels(labels);
+         
+        //Options
+        LineChartOptions options = new LineChartOptions();        
+//        Title title = new Title();
+//        title.setDisplay(true);
+//        title.setText("Line Chart");
+//        options.setTitle(title);
+         
+        speedMedian.setOptions(options);
+        speedMedian.setData(data); 
+    }
+    
+        public void createminMaxBarModel(List<String> labels, List<Number> valuesMin, List<Number> valuesMax) {
+        minMax = new BarChartModel();
+        ChartData data = new ChartData();
+         
+        BarChartDataSet barDataSet = new BarChartDataSet();
+        barDataSet.setLabel("Min Speed");
+        barDataSet.setBackgroundColor("rgb(211, 22, 32)");
+        barDataSet.setStack("Stack 0");
+        barDataSet.setData(valuesMin);
+         
+         
+        BarChartDataSet barDataSet3 = new BarChartDataSet();
+        barDataSet3.setLabel("Max Speed");
+        barDataSet3.setBackgroundColor("rgb(19, 136, 8)");
+        barDataSet3.setStack("Stack 1");
+        List<Number> dataVal3 = new ArrayList<>();
+        dataVal3.add(-45);
+        dataVal3.add(73);
+        dataVal3.add(-25);
+        dataVal3.add(65);
+        dataVal3.add(49);
+        dataVal3.add(-18);
+        dataVal3.add(46);
+        barDataSet3.setData(valuesMax);
+         
+        data.addChartDataSet(barDataSet);
+        data.addChartDataSet(barDataSet3);
+         
+
+        data.setLabels(labels);
+        minMax.setData(data);
+         
+        //Options
+        BarChartOptions options = new BarChartOptions();
+        CartesianScales cScales = new CartesianScales();
+        CartesianLinearAxes linearAxes = new CartesianLinearAxes();
+        linearAxes.setStacked(true);    
+        cScales.addXAxesData(linearAxes);
+        cScales.addYAxesData(linearAxes);
+        options.setScales(cScales);
+         
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("Minimum & Maximum Speed");
+        options.setTitle(title);
+         
+//        Tooltip tooltip = new Tooltip();
+//        tooltip.setMode("index");
+//        tooltip.setIntersect(false);
+//        options.setTooltip(tooltip);  
+         
+        minMax.setOptions(options);
+    }
+        
+       public void buttonActionMonth(){
+           
+       service1.getMonthData(100,4,2018);
+               if(month==null){
+            PrimeFaces.current().executeScript("hideBar();");  
+       Utils.addDetailMessage("Please select a month!",FacesMessage.SEVERITY_ERROR);
+               }
+//        }else{
+//      //PrimeFaces.current().executeScript("showBar();");
+//      Long timestampFrom = (Long) day.getTime()/1000;
+//      Long timestampTo  = (Long) Utils.addDays(day, 1).getTime()/1000;
+//      dayData = service1.getDayData(100,timestampFrom,timestampTo);
+//     
+//      if(dayData.isEmpty()){
+//      Utils.addDetailMessage("There are not available data for this path and  this time window!",FacesMessage.SEVERITY_WARN);
+//      return;
+//      }
+//      dayLabels = prepareDayLabels(dayData);
+//      dayCountValues = prepareDayCountValues(dayData);
+//      daySpeedValues =  prepareDaySpeedValues(dayData);
+//      dayTimeValues = prepareDayTimeValues(dayData);
+//      dayMedianSpeedValues = prepareDaySpeedMedianValues(dayData);
+//       daySpeedMinValues = prepareDaySpeedMinValues(dayData);
+//       daySpeedMaxValues = prepareDaySpeedMaxValues(dayData);
+//      createBarModelDayCount(dayLabels,dayCountValues);
+//      createLineModelDaySpeed(dayLabels,daySpeedValues);
+//      createLineModelDayTime(dayLabels,dayTimeValues);
+//      createLineModelDayMedianSpeed(dayLabels,dayMedianSpeedValues);
+//      createminMaxBarModel(dayLabels,daySpeedMinValues,daySpeedMaxValues);
+//      PrimeFaces.current().executeScript("hideBar();"); 
+//      showDailyStatistics = true;
+//    }
+       }
+
+
 }
