@@ -88,7 +88,7 @@ public class PathService implements PathDao  {
                  returnList.add(tmpData);
         });
 
-        return new ArrayList<>();
+        return returnList;
     }
     
     

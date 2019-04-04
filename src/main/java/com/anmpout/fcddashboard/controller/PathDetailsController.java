@@ -6,6 +6,7 @@
 package com.anmpout.fcddashboard.controller;
 
 import com.anmpout.fcddashboard.model.FilterData;
+import com.anmpout.fcddashboard.model.MonthData;
 import com.anmpout.fcddashboard.model.Path;
 import com.anmpout.fcddashboard.service.PathService;
 import com.anmpout.fcddashboard.utils.Utils;
@@ -83,7 +84,19 @@ public class PathDetailsController implements Serializable {
      List<Number> dayMedianSpeedValues;
      List<Number> daySpeedMinValues;
      List<Number> daySpeedMaxValues;
+     List<String> monthLabels; 
+     List<Number> monthSpeedValues;
+     List<Number> monthSpeedMinValues;
+     List<Number> monthSpeedMaxValues;
+     List<Number> monthTimeValues;
+     List<Number> monthTimeMinValues;
+     List<Number> monthTimeMaxValues;
+     List<Number> monthCountValues;
+     List<Number> monthCountMinValues;
+     List<Number> monthCountMaxValues;
+
      private List<FilterData> dayData;
+     private List<MonthData> monthData;
      private String detactionDayColor = "rgb(242,109,33)";
      private String speedDayColor = "rgb(75, 192, 192)";
      private String travelTimeDayColor = "rgb(154, 38, 23)";
@@ -104,6 +117,17 @@ public class PathDetailsController implements Serializable {
         dayMedianSpeedValues = new ArrayList<>();
         daySpeedMinValues = new ArrayList<>();
         daySpeedMaxValues = new ArrayList<>();
+        monthLabels = new ArrayList<>();
+        monthSpeedValues = new ArrayList<>();
+        monthSpeedMinValues = new ArrayList<>();
+        monthSpeedMaxValues = new ArrayList<>();
+        monthTimeValues = new ArrayList<>();
+        monthTimeMinValues = new ArrayList<>();
+        monthTimeMaxValues = new ArrayList<>();
+        monthCountValues = new ArrayList<>();
+        monthCountMinValues = new ArrayList<>();
+        monthCountMaxValues = new ArrayList<>();
+        monthData = new ArrayList<>();
         pathDistance="";
         region="";
         pathJSONString="";
@@ -403,7 +427,7 @@ public class PathDetailsController implements Serializable {
       //PrimeFaces.current().executeScript("showBar();");
       Long timestampFrom = (Long) day.getTime()/1000;
       Long timestampTo  = (Long) Utils.addDays(day, 1).getTime()/1000;
-      dayData = service1.getDayData(100,timestampFrom,timestampTo);
+      dayData = service1.getDayData(pathId,timestampFrom,timestampTo);
      
       if(dayData.isEmpty()){
       Utils.addDetailMessage("There are not available data for this path and  this time window!",FacesMessage.SEVERITY_WARN);
@@ -535,7 +559,7 @@ public class PathDetailsController implements Serializable {
         return medianSpeedValues; 
     }
     
-        private List<Number> prepareDaySpeedMinValues(List<FilterData> dayData) {
+    private List<Number> prepareDaySpeedMinValues(List<FilterData> dayData) {
               List<Number> minSpeeds = new ArrayList<>();
               for(FilterData fd :dayData){
                  minSpeeds.add(fd.getMinSpeed());
@@ -580,7 +604,7 @@ public class PathDetailsController implements Serializable {
         speedMedian.setData(data); 
     }
     
-        public void createminMaxBarModel(List<String> labels, List<Number> valuesMin, List<Number> valuesMax) {
+    public void createminMaxBarModel(List<String> labels, List<Number> valuesMin, List<Number> valuesMax) {
         minMax = new BarChartModel();
         ChartData data = new ChartData();
          
@@ -634,39 +658,115 @@ public class PathDetailsController implements Serializable {
         minMax.setOptions(options);
     }
         
-       public void buttonActionMonth(){
-           
-       service1.getMonthData(100,4,2018);
-               if(month==null){
+    public void buttonActionMonth(){
+      if(month==null){
             PrimeFaces.current().executeScript("hideBar();");  
        Utils.addDetailMessage("Please select a month!",FacesMessage.SEVERITY_ERROR);
-               }
-//        }else{
-//      //PrimeFaces.current().executeScript("showBar();");
-//      Long timestampFrom = (Long) day.getTime()/1000;
-//      Long timestampTo  = (Long) Utils.addDays(day, 1).getTime()/1000;
-//      dayData = service1.getDayData(100,timestampFrom,timestampTo);
-//     
-//      if(dayData.isEmpty()){
-//      Utils.addDetailMessage("There are not available data for this path and  this time window!",FacesMessage.SEVERITY_WARN);
-//      return;
-//      }
-//      dayLabels = prepareDayLabels(dayData);
-//      dayCountValues = prepareDayCountValues(dayData);
-//      daySpeedValues =  prepareDaySpeedValues(dayData);
-//      dayTimeValues = prepareDayTimeValues(dayData);
-//      dayMedianSpeedValues = prepareDaySpeedMedianValues(dayData);
-//       daySpeedMinValues = prepareDaySpeedMinValues(dayData);
-//       daySpeedMaxValues = prepareDaySpeedMaxValues(dayData);
+               
+        }else{
+      //PrimeFaces.current().executeScript("showBar();");
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(month);
+        Integer monthPart = cal.get(Calendar.MONTH);
+        Integer yearPart = cal.get(Calendar.YEAR);
+     // Integer year  = (Integer) Utils.addDays(day, 1).getTime()/1000;
+      monthData = service1.getMonthData(pathId,monthPart+1,yearPart);
+     
+      if(monthData.isEmpty()){
+      Utils.addDetailMessage("There are not available data for this path and  this time window!",FacesMessage.SEVERITY_WARN);
+      return;
+      }
+      monthLabels = prepareMonthLabels(monthData);
+      monthCountValues = prepareMonthCountValues(monthData);
+      monthCountMinValues = prepareMonthMinMaxCountValues(monthData,1);
+      monthCountMaxValues = prepareMonthMinMaxCountValues(monthData,2);
+      monthSpeedValues =  prepareMonthSpeedValues(monthData);
+      monthSpeedMinValues = prepareMonthSpeedMinMaxValues(monthData,1);
+      monthSpeedMaxValues = prepareMonthSpeedMinMaxValues(monthData,2);
+      monthTimeValues = prepareMonthTimeValues(monthData);
+      monthTimeMinValues = prepareMonthTimeMinMaxValues(monthData,1);
+      monthTimeMaxValues = prepareMonthTimeMinMaxValues(monthData,2);
+
 //      createBarModelDayCount(dayLabels,dayCountValues);
 //      createLineModelDaySpeed(dayLabels,daySpeedValues);
 //      createLineModelDayTime(dayLabels,dayTimeValues);
 //      createLineModelDayMedianSpeed(dayLabels,dayMedianSpeedValues);
 //      createminMaxBarModel(dayLabels,daySpeedMinValues,daySpeedMaxValues);
-//      PrimeFaces.current().executeScript("hideBar();"); 
-//      showDailyStatistics = true;
-//    }
+      PrimeFaces.current().executeScript("hideBar();"); 
+      showMonthlyStatistics = true;
+    }
        }
+
+    private List<String> prepareMonthLabels(List<MonthData> monthData) {
+                  List<String> labels = new ArrayList<>();
+                  monthData.stream().map((md) -> md.getDay()+"/"+md.getMonth()).forEachOrdered((label) -> {
+                      labels.add(label);
+        });
+        return labels;
+    }
+
+    private List<Number> prepareMonthCountValues(List<MonthData> monthData) {
+        List<Number> counts = new ArrayList<>();
+        monthData.forEach((md) -> {
+            counts.add(md.getCount());
+        });
+        return counts;
+    }
+
+
+
+    private List<Number> prepareMonthMinMaxCountValues(List<MonthData> monthData, int minMax) {
+              List<Number> minMaxList = new ArrayList<>();
+        for(MonthData md :monthData){
+        if(minMax==1){  
+        minMaxList.add(md.getMinCount());
+        }else{
+        minMaxList.add(md.getMaxCount());
+        }
+        }
+        return minMaxList;
+    }
+
+    private List<Number> prepareMonthSpeedValues(List<MonthData> monthData) {
+        List<Number> speed = new ArrayList<>();
+        monthData.forEach((md) -> {
+            speed.add(md.getSpeed());
+        });
+        return speed;   
+    }
+    
+
+    private List<Number> prepareMonthSpeedMinMaxValues(List<MonthData> monthData, int minMax) {
+              List<Number> minMaxList = new ArrayList<>();
+        for(MonthData md :monthData){
+        if(minMax==1){  
+        minMaxList.add(md.getMinSpeed());
+        }else{
+        minMaxList.add(md.getMaxSpeed());
+        }
+        }
+        return minMaxList;
+    }
+
+    private List<Number> prepareMonthTimeValues(List<MonthData> monthData) {
+            List<Number> time = new ArrayList<>();
+        for(MonthData md :monthData){
+        time.add(md.getTime());
+        }
+        return time;   
+    }
+
+        private List<Number> prepareMonthTimeMinMaxValues(List<MonthData> monthData, int minMax) {
+              List<Number> minMaxList = new ArrayList<>();
+              monthData.forEach((md) -> {
+                  if(minMax==1){
+                      minMaxList.add(md.getMinTime());
+                  }else{
+                      minMaxList.add(md.getMaxTime());
+                  }
+        });
+        return minMaxList;
+    }
 
 
 }
