@@ -67,10 +67,11 @@ public class PathDetailsController implements Serializable {
     private LineChartModel time;
     private LineChartModel speedMedian;
     private BarChartModel countMonthly;
-    private BarChartModel minMaxMonthly;
+    private BarChartModel minMaxCountMonthly;
     private LineChartModel speedMonthly;
+    private BarChartModel minMaxSpeedMonthly;
     private LineChartModel timeMonthly;
-    private LineChartModel speedMedianMonthly;
+    private BarChartModel minMaxTMonthly;
     private static final SimpleDateFormat MONTH_YEAR_FORMAT = new SimpleDateFormat("MM/yyyy");
     private boolean showDailyStatistics = false;
     private boolean showMonthlyStatistics = false;
@@ -144,11 +145,13 @@ public class PathDetailsController implements Serializable {
          count = new BarChartModel();
          minMax = new BarChartModel();
          speedMedian = new LineChartModel();
-        countMonthly =  new BarChartModel();;
-        minMaxMonthly =  new BarChartModel();;
-        speedMonthly= new LineChartModel();;
-        timeMonthly= new LineChartModel();;
-        speedMedianMonthly= new LineChartModel();;
+        countMonthly =  new BarChartModel();
+        minMaxCountMonthly =  new BarChartModel();
+        speedMonthly= new LineChartModel();
+        timeMonthly= new LineChartModel();
+        minMaxSpeedMonthly = new BarChartModel();
+        minMaxTMonthly = new BarChartModel();
+
     }
 
     public boolean isEnableSelectDayButton() {
@@ -272,13 +275,6 @@ public class PathDetailsController implements Serializable {
         this.countMonthly = countMonthly;
     }
 
-    public BarChartModel getMinMaxMonthly() {
-        return minMaxMonthly;
-    }
-
-    public void setMinMaxMonthly(BarChartModel minMaxMonthly) {
-        this.minMaxMonthly = minMaxMonthly;
-    }
 
     public LineChartModel getSpeedMonthly() {
         return speedMonthly;
@@ -296,16 +292,6 @@ public class PathDetailsController implements Serializable {
         this.timeMonthly = timeMonthly;
     }
 
-    public LineChartModel getSpeedMedianMonthly() {
-        return speedMedianMonthly;
-    }
-
-    public void setSpeedMedianMonthly(LineChartModel speedMedianMonthly) {
-        this.speedMedianMonthly = speedMedianMonthly;
-    }
-    
-    
-    
 
     private void setupFields() {
         if(path.getRegionId()==1){
@@ -361,6 +347,31 @@ public class PathDetailsController implements Serializable {
     public void setMinMax(BarChartModel minMax) {
         this.minMax = minMax;
     }
+
+    public BarChartModel getMinMaxCountMonthly() {
+        return minMaxCountMonthly;
+    }
+
+    public void setMinMaxCountMonthly(BarChartModel minMaxCountMonthly) {
+        this.minMaxCountMonthly = minMaxCountMonthly;
+    }
+
+    public BarChartModel getMinMaxSpeedMonthly() {
+        return minMaxSpeedMonthly;
+    }
+
+    public void setMinMaxSpeedMonthly(BarChartModel minMaxSpeedMonthly) {
+        this.minMaxSpeedMonthly = minMaxSpeedMonthly;
+    }
+
+    public BarChartModel getMinMaxTMonthly() {
+        return minMaxTMonthly;
+    }
+
+    public void setMinMaxTMonthly(BarChartModel minMaxTMonthly) {
+        this.minMaxTMonthly = minMaxTMonthly;
+    }
+    
     
     
     
@@ -670,9 +681,10 @@ public class PathDetailsController implements Serializable {
         Integer monthPart = cal.get(Calendar.MONTH);
         Integer yearPart = cal.get(Calendar.YEAR);
      // Integer year  = (Integer) Utils.addDays(day, 1).getTime()/1000;
-      monthData = service1.getMonthData(pathId,monthPart+1,yearPart);
+      monthData = service1.getMonthData(33,monthPart+1,yearPart);
      
       if(monthData.isEmpty()){
+      PrimeFaces.current().executeScript("hideBar();");  
       Utils.addDetailMessage("There are not available data for this path and  this time window!",FacesMessage.SEVERITY_WARN);
       return;
       }
@@ -687,11 +699,12 @@ public class PathDetailsController implements Serializable {
       monthTimeMinValues = prepareMonthTimeMinMaxValues(monthData,1);
       monthTimeMaxValues = prepareMonthTimeMinMaxValues(monthData,2);
 
-//      createBarModelDayCount(dayLabels,dayCountValues);
-//      createLineModelDaySpeed(dayLabels,daySpeedValues);
-//      createLineModelDayTime(dayLabels,dayTimeValues);
-//      createLineModelDayMedianSpeed(dayLabels,dayMedianSpeedValues);
-//      createminMaxBarModel(dayLabels,daySpeedMinValues,daySpeedMaxValues);
+         createBarModelMonthCount(monthLabels,monthCountValues);
+         createMinMaxCountBarModel(monthLabels,monthCountMinValues,monthCountMaxValues);
+        createLineModelMonthSpeed(monthLabels,monthSpeedValues);
+        createMinMaxBarSpeedModel(monthLabels,monthSpeedMinValues,monthSpeedMaxValues);
+        createLineModelMonthTime(monthLabels,monthTimeValues);
+        createMinMaxBarTimeModel(monthLabels,monthTimeMinValues,monthTimeMaxValues);
       PrimeFaces.current().executeScript("hideBar();"); 
       showMonthlyStatistics = true;
     }
@@ -713,8 +726,6 @@ public class PathDetailsController implements Serializable {
         return counts;
     }
 
-
-
     private List<Number> prepareMonthMinMaxCountValues(List<MonthData> monthData, int minMax) {
               List<Number> minMaxList = new ArrayList<>();
         for(MonthData md :monthData){
@@ -735,7 +746,6 @@ public class PathDetailsController implements Serializable {
         return speed;   
     }
     
-
     private List<Number> prepareMonthSpeedMinMaxValues(List<MonthData> monthData, int minMax) {
               List<Number> minMaxList = new ArrayList<>();
         for(MonthData md :monthData){
@@ -766,6 +776,277 @@ public class PathDetailsController implements Serializable {
                   }
         });
         return minMaxList;
+    }
+
+    private void createBarModelMonthCount(List<String> labels, List<Number> values) {
+    countMonthly = new org.primefaces.model.charts.bar.BarChartModel();
+    ChartData data = new ChartData();
+
+    org.primefaces.model.charts.bar.BarChartDataSet barDataSet = new org.primefaces.model.charts.bar.BarChartDataSet();
+    barDataSet.setLabel("Detactions");
+
+    barDataSet.setData(values);
+
+    List<String> bgColor = new ArrayList<>();
+    List<String> borderColor = new ArrayList<>();
+    for(int i=0;i<values.size();i++){
+    bgColor.add(detactionDayColor);
+    borderColor.add(detactionDayColor);
+    }
+    // 
+
+    
+
+        barDataSet.setBackgroundColor(bgColor);
+        barDataSet.setBorderColor(borderColor);
+        barDataSet.setBorderWidth(1);
+
+    data.addChartDataSet(barDataSet);
+    data.setLabels(labels);
+    countMonthly.setData(data);
+
+    //Options
+    org.primefaces.model.charts.bar.BarChartOptions options = new org.primefaces.model.charts.bar.BarChartOptions();
+    CartesianScales cScales = new CartesianScales();
+    CartesianLinearAxes linearAxes = new CartesianLinearAxes();
+    CartesianLinearTicks ticks = new CartesianLinearTicks();
+    ticks.setBeginAtZero(true);
+    linearAxes.setTicks(ticks);
+    cScales.addYAxesData(linearAxes);
+    options.setScales(cScales);
+
+//    Title title = new Title();
+//    title.setDisplay(true);
+//    title.setText("Bar Chart");
+//    options.setTitle(title);
+
+//    Legend legend = new Legend();
+//    legend.setDisplay(true);
+//    legend.setPosition("top");
+//    LegendLabel legendLabels = new LegendLabel();
+//    legendLabels.setFontStyle("bold");
+//    legendLabels.setFontColor("#2980B9");
+//    legendLabels.setFontSize(24);
+//    legend.setLabels(legendLabels);
+//    options.setLegend(legend);
+
+    countMonthly.setOptions(options);
+
+    }
+
+    private void createMinMaxCountBarModel(List<String> labels, List<Number> valuesMin, List<Number> valuesMax) {
+        minMaxCountMonthly = new BarChartModel();
+        ChartData data = new ChartData();
+         
+        BarChartDataSet barDataSet = new BarChartDataSet();
+        barDataSet.setLabel("Min Detactions");
+        barDataSet.setBackgroundColor("rgb(211, 22, 32)");
+        barDataSet.setStack("Stack 0");
+        barDataSet.setData(valuesMin);
+         
+         
+        BarChartDataSet barDataSet3 = new BarChartDataSet();
+        barDataSet3.setLabel("Max Detactions");
+        barDataSet3.setBackgroundColor("rgb(19, 136, 8)");
+        barDataSet3.setStack("Stack 1");
+        List<Number> dataVal3 = new ArrayList<>();
+        dataVal3.add(-45);
+        dataVal3.add(73);
+        dataVal3.add(-25);
+        dataVal3.add(65);
+        dataVal3.add(49);
+        dataVal3.add(-18);
+        dataVal3.add(46);
+        barDataSet3.setData(valuesMax);
+         
+        data.addChartDataSet(barDataSet);
+        data.addChartDataSet(barDataSet3);
+         
+
+        data.setLabels(labels);
+        minMaxCountMonthly.setData(data);
+         
+        //Options
+        BarChartOptions options = new BarChartOptions();
+        CartesianScales cScales = new CartesianScales();
+        CartesianLinearAxes linearAxes = new CartesianLinearAxes();
+        linearAxes.setStacked(true);    
+        cScales.addXAxesData(linearAxes);
+        cScales.addYAxesData(linearAxes);
+        options.setScales(cScales);
+         
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("Minimum & Maximum Detactions");
+        options.setTitle(title);
+         
+//        Tooltip tooltip = new Tooltip();
+//        tooltip.setMode("index");
+//        tooltip.setIntersect(false);
+//        options.setTooltip(tooltip);  
+         
+        minMaxCountMonthly.setOptions(options);    }
+
+    private void createLineModelMonthSpeed(List<String> labels, List<Number> values) {
+        speedMonthly = new LineChartModel();
+        ChartData data = new ChartData();
+         
+        LineChartDataSet dataSet = new LineChartDataSet();
+        dataSet.setData(values);
+        dataSet.setFill(false);
+        dataSet.setLabel("Speed");
+        dataSet.setBorderColor(speedDayColor);
+        dataSet.setBackgroundColor(speedDayColor);
+        dataSet.setLineTension(0.1);
+        data.addChartDataSet(dataSet);
+         
+        data.setLabels(labels);
+         
+        //Options
+        LineChartOptions options = new LineChartOptions();        
+//        Title title = new Title();
+//        title.setDisplay(true);
+//        title.setText("Line Chart");
+//        options.setTitle(title);
+         
+        speedMonthly.setOptions(options);
+        speedMonthly.setData(data);
+           }
+
+    private void createMinMaxBarSpeedModel(List<String> labels, List<Number> valuesMin, List<Number> valuesMax) {
+ minMaxSpeedMonthly = new BarChartModel();
+        ChartData data = new ChartData();
+         
+        BarChartDataSet barDataSet = new BarChartDataSet();
+        barDataSet.setLabel("Min Speed");
+        barDataSet.setBackgroundColor("rgb(211, 22, 32)");
+        barDataSet.setStack("Stack 0");
+        barDataSet.setData(valuesMin);
+         
+         
+        BarChartDataSet barDataSet3 = new BarChartDataSet();
+        barDataSet3.setLabel("Max Speed");
+        barDataSet3.setBackgroundColor("rgb(19, 136, 8)");
+        barDataSet3.setStack("Stack 1");
+        List<Number> dataVal3 = new ArrayList<>();
+        dataVal3.add(-45);
+        dataVal3.add(73);
+        dataVal3.add(-25);
+        dataVal3.add(65);
+        dataVal3.add(49);
+        dataVal3.add(-18);
+        dataVal3.add(46);
+        barDataSet3.setData(valuesMax);
+         
+        data.addChartDataSet(barDataSet);
+        data.addChartDataSet(barDataSet3);
+         
+
+        data.setLabels(labels);
+        minMaxSpeedMonthly.setData(data);
+         
+        //Options
+        BarChartOptions options = new BarChartOptions();
+        CartesianScales cScales = new CartesianScales();
+        CartesianLinearAxes linearAxes = new CartesianLinearAxes();
+        linearAxes.setStacked(true);    
+        cScales.addXAxesData(linearAxes);
+        cScales.addYAxesData(linearAxes);
+        options.setScales(cScales);
+         
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("Minimum & Maximum Speed");
+        options.setTitle(title);
+         
+//        Tooltip tooltip = new Tooltip();
+//        tooltip.setMode("index");
+//        tooltip.setIntersect(false);
+//        options.setTooltip(tooltip);  
+         
+        minMaxSpeedMonthly.setOptions(options); 
+
+    }
+
+    private void createLineModelMonthTime(List<String> labels, List<Number> values) {
+  timeMonthly = new LineChartModel();
+        ChartData data = new ChartData();
+         
+        LineChartDataSet dataSet = new LineChartDataSet();
+        dataSet.setData(values);
+        dataSet.setFill(false);
+        dataSet.setLabel("Travel time");
+        dataSet.setBorderColor(speedDayColor);
+        dataSet.setBackgroundColor(speedDayColor);
+        dataSet.setLineTension(0.1);
+        data.addChartDataSet(dataSet);
+         
+        data.setLabels(labels);
+         
+        //Options
+        LineChartOptions options = new LineChartOptions();        
+//        Title title = new Title();
+//        title.setDisplay(true);
+//        title.setText("Line Chart");
+//        options.setTitle(title);
+         
+        timeMonthly.setOptions(options);
+        timeMonthly.setData(data); 
+    }
+
+    private void createMinMaxBarTimeModel(List<String> labels, List<Number> valuesMin, List<Number> valuesMax) {
+minMaxTMonthly = new BarChartModel();
+        ChartData data = new ChartData();
+         
+        BarChartDataSet barDataSet = new BarChartDataSet();
+        barDataSet.setLabel("Min Travel Time");
+        barDataSet.setBackgroundColor("rgb(211, 22, 32)");
+        barDataSet.setStack("Stack 0");
+        barDataSet.setData(valuesMin);
+         
+         
+        BarChartDataSet barDataSet3 = new BarChartDataSet();
+        barDataSet3.setLabel("Max Travel Time");
+        barDataSet3.setBackgroundColor("rgb(19, 136, 8)");
+        barDataSet3.setStack("Stack 1");
+        List<Number> dataVal3 = new ArrayList<>();
+        dataVal3.add(-45);
+        dataVal3.add(73);
+        dataVal3.add(-25);
+        dataVal3.add(65);
+        dataVal3.add(49);
+        dataVal3.add(-18);
+        dataVal3.add(46);
+        barDataSet3.setData(valuesMax);
+         
+        data.addChartDataSet(barDataSet);
+        data.addChartDataSet(barDataSet3);
+         
+
+        data.setLabels(labels);
+        minMaxTMonthly.setData(data);
+         
+        //Options
+        BarChartOptions options = new BarChartOptions();
+        CartesianScales cScales = new CartesianScales();
+        CartesianLinearAxes linearAxes = new CartesianLinearAxes();
+        linearAxes.setStacked(true);    
+        cScales.addXAxesData(linearAxes);
+        cScales.addYAxesData(linearAxes);
+        options.setScales(cScales);
+         
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("Minimum & Maximum Travel Time");
+        options.setTitle(title);
+         
+//        Tooltip tooltip = new Tooltip();
+//        tooltip.setMode("index");
+//        tooltip.setIntersect(false);
+//        options.setTooltip(tooltip);  
+         
+        minMaxTMonthly.setOptions(options); 
+    
     }
 
 

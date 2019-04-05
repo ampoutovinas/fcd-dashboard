@@ -194,7 +194,6 @@
                                 <div class="row" style="text-align: left;font-size: 1.2em">
                                         <div class="ui-lg-6 ui-g-12">
                                                <p:barChart model="#{pathDetailsController.minMax}" style="height: 400px;"/>
-<!--                                      <p:lineChart model="#{pathDetailsController.speedMedian}" style= "height: 400px;"/>                                     -->
                                     </div>
                                         <div class="ui-lg-6 ui-g-12">
                                        <p:barChart model="#{pathDetailsController.count}" style="height: 400px;"/>
@@ -226,16 +225,24 @@
                                      <p:lineChart model="#{pathDetailsController.speedMonthly}" style= "height: 400px;"/>
                                     </div>
                                     <div class="ui-lg-6 ui-g-12">
-                                     <p:lineChart model="#{pathDetailsController.timeMonthly}" style= "height: 400px;"/>
+                                              <p:barChart model="#{pathDetailsController.minMaxSpeedMonthly}" style="height: 400px;"/>
+                          
                                     </div>
                                 </div>
                                 <div class="row" style="text-align: left;font-size: 1.2em">
                                         <div class="ui-lg-6 ui-g-12">
-                                               <p:barChart model="#{pathDetailsController.minMaxMonthly}" style="height: 400px;"/>
-<!--                                      <p:lineChart model="#{pathDetailsController.speedMedian}" style= "height: 400px;"/>                                     -->
+                                     <p:barChart model="#{pathDetailsController.countMonthly}" style="height: 400px;"/>
                                     </div>
                                         <div class="ui-lg-6 ui-g-12">
-                                       <p:barChart model="#{pathDetailsController.countMonthly}" style="height: 400px;"/>
+                                            <p:barChart model="#{pathDetailsController.minMaxCountMonthly}" style="height: 400px;"/>
+                                    </div>
+                                </div>
+                                    <div class="row" style="text-align: left;font-size: 1.2em">
+                                        <div class="ui-lg-6 ui-g-12">
+                                                       <p:lineChart model="#{pathDetailsController.timeMonthly}" style= "height: 400px;"/>                                          
+                                    </div>
+                                        <div class="ui-lg-6 ui-g-12">
+                                            <p:barChart model="#{pathDetailsController.minMaxTMonthly}" style="height: 400px;"/>
                                     </div>
                                 </div>
                             </p:panel>  
