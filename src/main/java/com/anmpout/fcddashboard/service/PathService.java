@@ -91,6 +91,14 @@ public class PathService implements PathDao  {
         return returnList;
     }
     
+        @Override
+    public List<Path> getAllPathsForRT(Long timestampFrom) {
+        Query query = entityManager.createQuery("SELECT p FROM Path p INNER JOIN"
+                + " FilterDataRT rt ON p.pathId = rt.pathId WHERE rt.timestamp=?1 ORDER BY rt.pathId");
+         query.setParameter(1, timestampFrom);
+        return query.getResultList();
+    }
+    
     
 //    SELECT  T.PATH_ID,T.DAY,T.MONTH,T.YEAR,AVG(T.TIME),
 //    MAX(T.TIME),MIN(T.TIME),AVG(T.COUNT),MAX(T.COUNT),MIN(T.COUNT),AVG(T.SPEED),MAX(T.SPEED),MIN(T.SPEED) FROM FILTER_DATA T

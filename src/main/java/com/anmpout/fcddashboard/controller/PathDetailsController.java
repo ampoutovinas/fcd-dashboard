@@ -707,6 +707,8 @@ context.getExternalContext().getSessionMap().put("pathId", pathId);
        Utils.addDetailMessage("Please select a month!",FacesMessage.SEVERITY_ERROR);
                
         }else{
+        FacesContext context = FacesContext.getCurrentInstance();
+        pathId = (Integer) context.getExternalContext().getSessionMap().get("pathId"); 
       //PrimeFaces.current().executeScript("showBar();");
         Calendar cal = Calendar.getInstance();
         cal.setTime(month);

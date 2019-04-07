@@ -14,10 +14,20 @@
 
     <ui:define name="body">
      <h:form>
-               
-                    <p:panel header="Paths"  styleClass="card">
+                   <p:panel styleClass="card" style="margin-bottom:20px;" >
+                
+                            <div class="row" style="text-align: right;font-size: 150%;">
+                            <div class="ui-g-12">
+                              <h:outputText value="Time window:"/> 
+                               <h:outputText value="#{rtpathController.currentDate}" style="font-weight: bold;" /> 
+                            </div>
+        
+                            </div>
+                    
+                    </p:panel> 
+                <p:panel header="Paths"  styleClass="card">
                 <h:panelGrid columns="1" cellpadding="10">
-                    <p:dataTable var="path" value="#{pathController.paths}" rows="10"
+                    <p:dataTable var="path" value="#{rtpathController.paths}" rows="10"
                                  paginator="true"
                                  selectionMode="single"
                                  rowKey="#{path.pathId}"
@@ -25,7 +35,7 @@
                                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                  rowsPerPageTemplate="5,10,20"
                                  styleClass="header-right no-border">
-                        <p:ajax event="rowSelect" listener="#{pathController.onRowSelect}"/>
+                        <p:ajax event="rowSelect" listener="#{rtpathController.onRowSelect}"/>
                         <p:column headerText="Id" style="width:70px;text-align: center;" sortBy="#{path.pathId}" >
                             <h:outputText value="#{path.pathId}" style="text-align: center;" />
                         </p:column>

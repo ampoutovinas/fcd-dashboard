@@ -25,5 +25,6 @@ public interface PathDao {
     public List<Path> getAllRegionPaths(Integer regionId);
     public List<FilterData> getDayData(Integer pathId,Long timestampFrom, Long timestampTo);
     public List<MonthData> getMonthData(Integer pathId,Integer month,Integer year) ;
+    public List<Path> getAllPathsForRT(Long timestampFrom);
     
 }
