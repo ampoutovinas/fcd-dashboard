@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import javafx.scene.control.Tooltip;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -53,7 +54,7 @@ public class PathDetailsController implements Serializable {
     @EJB
     private PathService service1;
     private Path path;
-    private int pathId=0;
+    private Integer pathId;
     private String pathDistance="";
     private String region="";
     private String pathJSONString="";
@@ -107,6 +108,17 @@ public class PathDetailsController implements Serializable {
        
           @PostConstruct
     public void init() {
+        if (FacesContext.getCurrentInstance().isPostback()) {
+            
+            System.out.println("test");
+                  // FacesContext context = FacesContext.getCurrentInstance();
+                   
+                   // pathId = Integer.valueOf((String) context.getExternalContext().getSessionMap().get("pathId")); 
+          
+             //path = service1.getPath(pathId);
+        //setupFields();
+       //pathJSONString = Utils.createPathJSONString(path.getPoints());
+        }else{
         showDailyStatistics = false;
         showMonthlyStatistics = false;
         enableSelectDayButton = false;
@@ -134,9 +146,21 @@ public class PathDetailsController implements Serializable {
         pathJSONString="";
         statisticsDate = Calendar.getInstance();
         monthYearSelection = MONTH_YEAR_FORMAT.format(statisticsDate.getTime());
+      
+        // charge combos....
+   
         try{
-       pathId = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
-        }catch(Exception ex){pathId =1;}
+           String value =  FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+    
+       pathId = Integer.parseInt(value);
+       FacesContext context = FacesContext.getCurrentInstance();
+context.getExternalContext().getSessionMap().put("pathId", pathId);
+  
+   
+        }catch(Exception ex){
+            pathId =1;
+        }
+      
        path = service1.getPath(pathId);
        setupFields();
        pathJSONString = Utils.createPathJSONString(path.getPoints());
@@ -151,9 +175,13 @@ public class PathDetailsController implements Serializable {
         timeMonthly= new LineChartModel();
         minMaxSpeedMonthly = new BarChartModel();
         minMaxTMonthly = new BarChartModel();
-
+        }
     }
-
+        @PreDestroy
+        public void saveState() {
+        
+        
+        }
     public boolean isEnableSelectDayButton() {
         return enableSelectDayButton;
     }
@@ -438,9 +466,13 @@ public class PathDetailsController implements Serializable {
       //PrimeFaces.current().executeScript("showBar();");
       Long timestampFrom = (Long) day.getTime()/1000;
       Long timestampTo  = (Long) Utils.addDays(day, 1).getTime()/1000;
+                         FacesContext context = FacesContext.getCurrentInstance();
+                   
+                    pathId = (Integer) context.getExternalContext().getSessionMap().get("pathId"); 
       dayData = service1.getDayData(pathId,timestampFrom,timestampTo);
      
       if(dayData.isEmpty()){
+      PrimeFaces.current().executeScript("hideBar();"); 
       Utils.addDetailMessage("There are not available data for this path and  this time window!",FacesMessage.SEVERITY_WARN);
       return;
       }
@@ -681,7 +713,7 @@ public class PathDetailsController implements Serializable {
         Integer monthPart = cal.get(Calendar.MONTH);
         Integer yearPart = cal.get(Calendar.YEAR);
      // Integer year  = (Integer) Utils.addDays(day, 1).getTime()/1000;
-      monthData = service1.getMonthData(33,monthPart+1,yearPart);
+      monthData = service1.getMonthData(pathId,monthPart+1,yearPart);
      
       if(monthData.isEmpty()){
       PrimeFaces.current().executeScript("hideBar();");  
