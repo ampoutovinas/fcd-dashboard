@@ -101,7 +101,7 @@ public class PathDetailsController implements Serializable {
      private List<MonthData> monthData;
      private String detactionDayColor = "rgb(242,109,33)";
      private String speedDayColor = "rgb(75, 192, 192)";
-     private String travelTimeDayColor = "rgb(154, 38, 23)";
+     private String travelTimeDayColor = "rgb(182, 29, 69)";
      private String speedMedianDayColor = "rgb(210, 216, 63)";
      
      //private String travelTimeDayColor ="rgb (154,38,23)";
