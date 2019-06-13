@@ -8,8 +8,10 @@ package com.anmpout.fcddashboard.service;
 
 import com.anmpout.fcddashboard.dao.PathDao;
 import com.anmpout.fcddashboard.model.FilterData;
+import com.anmpout.fcddashboard.model.FilterDataRT;
 import com.anmpout.fcddashboard.model.MonthData;
 import com.anmpout.fcddashboard.model.Path;
+import com.anmpout.fcddashboard.model.ProfileData;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -105,5 +107,14 @@ public class PathService implements PathDao  {
 //WHERE T.PATH_ID = 100 AND T.MONTH = 04 AND T.YEAR = 2018 
 // GROUP BY T.PATH_ID,T.DAY,T.MONTH,T.YEAR
 //ORDER BY T.PATH_ID,T.DAY,T.MONTH,T.YEAR;
+    @Override
+    public FilterDataRT getRTData(Integer pathId, Long currentTimestamp) {
+        
+        return new FilterDataRT();
+    }
+    @Override
+    public List<ProfileData> getProfileData(Integer pathId, Long currentTimestamp) {
+        return new ArrayList<>();
+    }
     
 }

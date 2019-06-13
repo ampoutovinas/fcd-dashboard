@@ -7,8 +7,10 @@ package com.anmpout.fcddashboard.dao;
 
 
 import com.anmpout.fcddashboard.model.FilterData;
+import com.anmpout.fcddashboard.model.FilterDataRT;
 import com.anmpout.fcddashboard.model.MonthData;
 import com.anmpout.fcddashboard.model.Path;
+import com.anmpout.fcddashboard.model.ProfileData;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -57,5 +59,10 @@ public interface PathDao {
      * @return List of Paths
      */
     public List<Path> getAllPathsForRT(Long timestampFrom);
+    
+  
+    public FilterDataRT getRTData(Integer pathId, Long currentTimestamp);
+    
+    public List<ProfileData> getProfileData(Integer pathId, Long currentTimestamp);
     
 }

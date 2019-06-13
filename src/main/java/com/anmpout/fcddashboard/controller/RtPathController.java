@@ -48,6 +48,7 @@ private String currentDate;
         currentDate = dateFormat.format(cal.getTime());
         System.out.println(currentDate);
          Long timestamp = (Long) cal.getTimeInMillis()/1000;
+        timestamp = Long.parseLong("1559192400");
 //      Long timestampTo  = (Long) Utils.addDays(day, 1).getTime()/1000;
         paths = service.getAllPathsForRT(timestamp);
       //  paths = new ArrayList<>();
@@ -65,7 +66,7 @@ private String currentDate;
     
       public void onRowSelect(SelectEvent event) {
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/FCDDashboard/path-analytics.xhtml?id="+((Path)event.getObject()).getPathId().toString());
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/FCDDashboard/path-analytics_rt.xhtml?id="+((Path)event.getObject()).getPathId().toString());
            // FacesContext.getCurrentInstance().getExternalContext().redirect("/FCDDashboard/path-analytics.xhtml?id=100");
         } catch (IOException ex) {
             Logger.getLogger(PathController.class.getName()).log(Level.SEVERE, null, ex);
