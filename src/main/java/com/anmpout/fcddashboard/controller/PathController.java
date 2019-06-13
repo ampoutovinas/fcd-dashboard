@@ -45,7 +45,6 @@ private List<Path> paths;
       public void onRowSelect(SelectEvent event) {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("/FCDDashboard/path-analytics.xhtml?id="+((Path)event.getObject()).getPathId().toString());
-           // FacesContext.getCurrentInstance().getExternalContext().redirect("/FCDDashboard/path-analytics.xhtml?id=100");
         } catch (IOException ex) {
             Logger.getLogger(PathController.class.getName()).log(Level.SEVERE, null, ex);
         }

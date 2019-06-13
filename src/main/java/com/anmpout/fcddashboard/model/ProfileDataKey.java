@@ -16,26 +16,50 @@ public class ProfileDataKey implements Serializable{
     private Long currentTimestamp;
     private Long oldTimestamp;
     
+    /**
+     *
+     * @return
+     */
     public Integer getPathId() {
         return pathId;
     }
 
+    /**
+     *
+     * @param pathId
+     */
     public void setPathId(Integer pathId) {
         this.pathId = pathId;
     }
 
+    /**
+     *
+     * @return
+     */
     public Long getCurrentTimestamp() {
         return currentTimestamp;
     }
 
+    /**
+     *
+     * @param currentTimestamp
+     */
     public void setCurrentTimestamp(Long currentTimestamp) {
         this.currentTimestamp = currentTimestamp;
     }
 
+    /**
+     *
+     * @return
+     */
     public Long getOldTimestamp() {
         return oldTimestamp;
     }
 
+    /**
+     *
+     * @param oldTimestamp
+     */
     public void setOldTimestamp(Long oldTimestamp) {
         this.oldTimestamp = oldTimestamp;
     }

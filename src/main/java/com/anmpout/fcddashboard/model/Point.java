@@ -33,26 +33,50 @@ public class Point implements Serializable {
     @Column(name = "LONGITUDE")
     private Double longitude;
 
+    /**
+     *
+     * @param pointId
+     */
     public void setPointId(Integer pointId) {
         this.pointId = pointId;
     }
 
+    /**
+     *
+     * @param latitude
+     */
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
+    /**
+     *
+     * @param longitude
+     */
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
+    /**
+     *
+     * @return
+     */
     public Integer getPointId() {
         return pointId;
     }
 
+    /**
+     *
+     * @return
+     */
     public Double getLatitude() {
         return latitude;
     }
 
+    /**
+     *
+     * @return
+     */
     public Double getLongitude() {
         return longitude;
     }

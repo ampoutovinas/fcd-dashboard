@@ -54,90 +54,178 @@ private Integer  month;
 @Column(name = "YEAR")
 private Integer  year;
 
+    /**
+     *
+     * @return
+     */
     public Integer getPathId() {
         return pathId;
     }
 
+    /**
+     *
+     * @param pathId
+     */
     public void setPathId(Integer pathId) {
         this.pathId = pathId;
     }
 
+    /**
+     *
+     * @return
+     */
     public Long getTimestamp() {
         return timestamp;
     }
 
+    /**
+     *
+     * @param timestamp
+     */
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
 
+    /**
+     *
+     * @return
+     */
     public Integer getCount() {
         return count;
     }
 
+    /**
+     *
+     * @param count
+     */
     public void setCount(Integer count) {
         this.count = count;
     }
 
+    /**
+     *
+     * @return
+     */
     public Double getSpeed() {
         return speed;
     }
 
+    /**
+     *
+     * @param speed
+     */
     public void setSpeed(Double speed) {
         this.speed = speed;
     }
 
+    /**
+     *
+     * @return
+     */
     public Integer getTime() {
         return time;
     }
 
+    /**
+     *
+     * @param time
+     */
     public void setTime(Integer time) {
         this.time = time;
     }
 
+    /**
+     *
+     * @return
+     */
     public Integer getDay() {
         return day;
     }
 
+    /**
+     *
+     * @param day
+     */
     public void setDay(Integer day) {
         this.day = day;
     }
 
+    /**
+     *
+     * @return
+     */
     public Integer getMonth() {
         return month;
     }
 
+    /**
+     *
+     * @param month
+     */
     public void setMonth(Integer month) {
         this.month = month;
     }
 
+    /**
+     *
+     * @return
+     */
     public Integer getYear() {
         return year;
     }
 
+    /**
+     *
+     * @param year
+     */
     public void setYear(Integer year) {
         this.year = year;
     }
 
+    /**
+     *
+     * @return
+     */
     public Double getMedianSpeed() {
         return medianSpeed;
     }
 
+    /**
+     *
+     * @param medianSpeed
+     */
     public void setMedianSpeed(Double medianSpeed) {
         this.medianSpeed = medianSpeed;
     }
 
+    /**
+     *
+     * @return
+     */
     public Double getMaxSpeed() {
         return maxSpeed;
     }
 
+    /**
+     *
+     * @param maxSpeed
+     */
     public void setMaxSpeed(Double maxSpeed) {
         this.maxSpeed = maxSpeed;
     }
 
+    /**
+     *
+     * @return
+     */
     public Double getMinSpeed() {
         return minSpeed;
     }
 
+    /**
+     *
+     * @param minSpeed
+     */
     public void setMinSpeed(Double minSpeed) {
         this.minSpeed = minSpeed;
     }

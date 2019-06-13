@@ -18,13 +18,44 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface PathDao {
-    
+    /**
+     * Return a single path
+     * @param pathId
+     * @return Path
+     */
     public Path getPath(Integer pathId);
-    
+    /**
+     * Returns all available paths
+     * @return List of Paths
+     */
     public List<Path> getAllPaths();
+    /**
+     * Returns all paths for a region
+     * @param regionId
+     * @return List of Paths
+     */
     public List<Path> getAllRegionPaths(Integer regionId);
+    /**
+     * Return data for a day
+     * @param pathId
+     * @param timestampFrom
+     * @param timestampTo
+     * @return List of FilterData
+     */
     public List<FilterData> getDayData(Integer pathId,Long timestampFrom, Long timestampTo);
+    /**
+     * Return data for a month
+     * @param pathId
+     * @param month
+     * @param year
+     * @return List of FilterData
+     */
     public List<MonthData> getMonthData(Integer pathId,Integer month,Integer year) ;
+    /**
+     * Returns all available paths
+     * @param timestampFrom
+     * @return List of Paths
+     */
     public List<Path> getAllPathsForRT(Long timestampFrom);
     
 }

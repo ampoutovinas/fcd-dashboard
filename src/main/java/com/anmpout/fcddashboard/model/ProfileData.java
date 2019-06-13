@@ -39,50 +39,98 @@ private Double  difCount;
 @Column(name = "DIF_TIME")
 private Double  difTime;
 
+    /**
+     *
+     * @return
+     */
     public Integer getPathId() {
         return pathId;
     }
 
+    /**
+     *
+     * @param pathId
+     */
     public void setPathId(Integer pathId) {
         this.pathId = pathId;
     }
 
+    /**
+     *
+     * @return
+     */
     public Long getCurrentTimestamp() {
         return currentTimestamp;
     }
 
+    /**
+     *
+     * @param currentTimestamp
+     */
     public void setCurrentTimestamp(Long currentTimestamp) {
         this.currentTimestamp = currentTimestamp;
     }
 
+    /**
+     *
+     * @return
+     */
     public Long getOldTimestamp() {
         return oldTimestamp;
     }
 
+    /**
+     *
+     * @param oldTimestamp
+     */
     public void setOldTimestamp(Long oldTimestamp) {
         this.oldTimestamp = oldTimestamp;
     }
 
+    /**
+     *
+     * @return
+     */
     public Double getDifSpeed() {
         return difSpeed;
     }
 
+    /**
+     *
+     * @param difSpeed
+     */
     public void setDifSpeed(Double difSpeed) {
         this.difSpeed = difSpeed;
     }
 
+    /**
+     *
+     * @return
+     */
     public Double getDifCount() {
         return difCount;
     }
 
+    /**
+     *
+     * @param difCount
+     */
     public void setDifCount(Double difCount) {
         this.difCount = difCount;
     }
 
+    /**
+     *
+     * @return
+     */
     public Double getDifTime() {
         return difTime;
     }
 
+    /**
+     *
+     * @param difTime
+     */
     public void setDifTime(Double difTime) {
         this.difTime = difTime;
     }

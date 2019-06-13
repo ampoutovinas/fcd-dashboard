@@ -15,18 +15,34 @@ public class FilterDataKey implements Serializable{
     private Integer pathId;
     private Long timestamp;
 
+    /**
+     *
+     * @return
+     */
     public Integer getPathId() {
         return pathId;
     }
 
+    /**
+     *
+     * @param pathId
+     */
     public void setPathId(Integer pathId) {
         this.pathId = pathId;
     }
 
+    /**
+     *
+     * @return
+     */
     public Long getTimestamp() {
         return timestamp;
     }
 
+    /**
+     *
+     * @param timestamp
+     */
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }

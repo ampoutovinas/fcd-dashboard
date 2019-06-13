@@ -28,8 +28,8 @@ import javax.persistence.Query;
 @Stateful
 @LocalBean
 public class PathService implements PathDao  {
-        @PersistenceContext
-        private EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
     @Override
     public Path getPath(Integer pathId) {
        Query query = entityManager.createQuery("SELECT p FROM Path p where p.pathId=?1");
