@@ -109,12 +109,18 @@ public class PathService implements PathDao  {
 //ORDER BY T.PATH_ID,T.DAY,T.MONTH,T.YEAR;
     @Override
     public FilterDataRT getRTData(Integer pathId, Long currentTimestamp) {
-        
-        return new FilterDataRT();
+                Query query = entityManager.createQuery("SELECT p FROM FilterDataRT p WHERE p.timestamp=?2 and p.pathId=?1 ORDER BY p.pathId");
+         query.setParameter(1, pathId);
+         query.setParameter(2, currentTimestamp);
+      
+        return  (FilterDataRT) query.getSingleResult();
     }
     @Override
     public List<ProfileData> getProfileData(Integer pathId, Long currentTimestamp) {
-        return new ArrayList<>();
+                     Query query = entityManager.createQuery("SELECT p FROM ProfileData p WHERE p.currentTimestamp=?2 and p.pathId=?1 ORDER BY p.pathId");
+         query.setParameter(1, pathId);
+         query.setParameter(2, currentTimestamp);
+        return query.getResultList();
     }
     
 }

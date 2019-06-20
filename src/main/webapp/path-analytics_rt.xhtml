@@ -167,15 +167,30 @@
                     <p:panel styleClass="card" >
                         <div class="row" style="text-align: left;font-size: 1.2em">
                             <div class="ui-g-12">
-                                <p:outputLabel for="day" value="Select Day" style="margin-left: 20px; margin-right: 20px;" />
-                                <p:calendar id="day" value="#{pathRTDetailsController.day}" mindate="01/01/2017" maxdate="30/07/2019" pattern="dd/MM/yyyy" >
-                         
-                                </p:calendar>
-         
-                                <p:commandButton value="Show" id="withIcon" action="#{pathRTDetailsController.buttonAction()}"
-                                                 update="crowl" style="margin-right:20px; margin-left: 20px;"
-                                                 icon="fa fa-bar-chart" styleClass="btn-primary" disabled="#{pathRTDetailsController.enableSelectDayButton}"
-                                                 onclick="showBar()" />
+                                
+                                <p:dataTable var="path" value="#{pathRTDetailsController.profileDataBean}" rows="10"
+                                 paginator="false"
+                                 selectionMode="single"
+                                 rowKey="#{path.oldTimestamp}"
+                              
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,20"
+                                 styleClass="header-right no-border">
+                   
+                                    <p:column headerText="Timestamp" style="width:150px;text-align: center;" >
+                            <h:outputText value="#{path.oldTimestamp}" style="text-align: center;" />
+                        </p:column>
+
+                        <p:column headerText="Speed" style="text-align: center;">
+                            <h:outputText value="#{path.difSpeed}" style="text-align: center;"/>
+                        </p:column>
+                        <p:column headerText="Time" style="text-align: center;">
+                            <h:outputText value="#{path.difTime}" style="text-align: center;"/>
+                        </p:column>
+                          <p:column headerText="Count" style="text-align: center;">
+                              <h:outputText value="#{path.difCount}" style="text-align: center;"/>
+                        </p:column>
+                    </p:dataTable>
                 
                             </div>
                         </div>

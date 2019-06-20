@@ -5,15 +5,13 @@
  */
 package com.anmpout.fcddashboard.controller;
 
-import com.anmpout.fcddashboard.model.FilterData;
 import com.anmpout.fcddashboard.model.FilterDataRT;
-import com.anmpout.fcddashboard.model.MonthData;
 import com.anmpout.fcddashboard.model.Path;
 import com.anmpout.fcddashboard.model.ProfileData;
+import com.anmpout.fcddashboard.model.ProfileDataBean;
 import com.anmpout.fcddashboard.service.PathService;
 import com.anmpout.fcddashboard.utils.Utils;
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,30 +19,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import javafx.scene.control.Tooltip;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
-import org.omnifaces.util.Messages;
-import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.model.charts.line.LineChartModel;
-import org.primefaces.model.charts.ChartData;
-import org.primefaces.model.charts.axes.cartesian.CartesianScales;
-import org.primefaces.model.charts.axes.cartesian.linear.CartesianLinearAxes;
-import org.primefaces.model.charts.axes.cartesian.linear.CartesianLinearTicks;
-import org.primefaces.model.charts.bar.BarChartDataSet;
-import org.primefaces.model.charts.bar.BarChartModel;
-import org.primefaces.model.charts.bar.BarChartOptions;
-import org.primefaces.model.charts.line.LineChartDataSet;
-import org.primefaces.model.charts.line.LineChartOptions;
-import org.primefaces.model.charts.optionconfig.legend.Legend;
-import org.primefaces.model.charts.optionconfig.legend.LegendLabel;
-import org.primefaces.model.charts.optionconfig.title.Title;
 
 /**
  *
@@ -58,6 +39,7 @@ public class PathRTDetailsController implements Serializable {
     private Path path;
     private FilterDataRT dataRT;
     private List<ProfileData> profileData;
+    private List<ProfileDataBean> profileDataBean;
     private String currentDate;
     private Integer pathId;
     private String pathDistance="";
@@ -98,7 +80,6 @@ public class PathRTDetailsController implements Serializable {
         statisticsDate = Calendar.getInstance();
         monthYearSelection = MONTH_YEAR_FORMAT.format(statisticsDate.getTime());
       
-        // charge combos....
    
         try{
            String value =  FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
@@ -111,10 +92,13 @@ context.getExternalContext().getSessionMap().put("pathId", pathId);
         }catch(Exception ex){
             pathId =1;
         }
-      
+       profileData = new ArrayList<>();
+       profileDataBean = new ArrayList<>();
        path = service1.getPath(pathId);
        dataRT = service1.getRTData(pathId,getCurrentTimestamp());
        profileData = service1.getProfileData(pathId,getCurrentTimestamp());
+
+       createProfileBeans(profileData);
        setupFields();
        pathJSONString = Utils.createPathJSONString(path.getPoints());
         }
@@ -290,34 +274,14 @@ context.getExternalContext().getSessionMap().put("pathId", pathId);
         currentDate = dateFormat.format(cal.getTime());
         System.out.println(currentDate);
          Long timestamp = (Long) cal.getTimeInMillis()/1000;
-        timestamp = Long.parseLong("1559192400");
+        //timestamp = Long.parseLong("1559192400");
         return timestamp;
 }
     
 
 
     public void buttonAction() {
-//        if(day==null){
-//            PrimeFaces.current().executeScript("hideBar();");  
-//       Utils.addDetailMessage("Please select a day!",FacesMessage.SEVERITY_ERROR);
-//        }else{
-//      //PrimeFaces.current().executeScript("showBar();");
-//      Long timestampFrom = (Long) day.getTime()/1000;
-//      Long timestampTo  = (Long) Utils.addDays(day, 1).getTime()/1000;
-//                         FacesContext context = FacesContext.getCurrentInstance();
-//                   
-//                    pathId = (Integer) context.getExternalContext().getSessionMap().get("pathId"); 
-//     // dayData = service1.getDayData(pathId,timestampFrom,timestampTo);
-//     
-//      if(dayData.isEmpty()){
-//      PrimeFaces.current().executeScript("hideBar();"); 
-//      Utils.addDetailMessage("There are not available data for this path and  this time window!",FacesMessage.SEVERITY_WARN);
-//      return;
-//      }
-//
-//      PrimeFaces.current().executeScript("hideBar();"); 
-//      showDailyStatistics = true;
-//    }
+
     }
     
     public void onDaySelect(SelectEvent event) {
@@ -327,33 +291,36 @@ context.getExternalContext().getSessionMap().put("pathId", pathId);
             
        
     public void buttonActionMonth(){
-//      if(month==null){
-//            PrimeFaces.current().executeScript("hideBar();");  
-//       Utils.addDetailMessage("Please select a month!",FacesMessage.SEVERITY_ERROR);
-//               
-//        }else{
-//        FacesContext context = FacesContext.getCurrentInstance();
-//        pathId = (Integer) context.getExternalContext().getSessionMap().get("pathId"); 
-//      //PrimeFaces.current().executeScript("showBar();");
-//        Calendar cal = Calendar.getInstance();
-//        cal.setTime(month);
-//        Integer monthPart = cal.get(Calendar.MONTH);
-//        Integer yearPart = cal.get(Calendar.YEAR);
-//     // Integer year  = (Integer) Utils.addDays(day, 1).getTime()/1000;
-//      monthData = service1.getMonthData(pathId,monthPart+1,yearPart);
-//     
-//      if(monthData.isEmpty()){
-//      PrimeFaces.current().executeScript("hideBar();");  
-//      Utils.addDetailMessage("There are not available data for this path and  this time window!",FacesMessage.SEVERITY_WARN);
-//      return;
-//      }
-//
-//      PrimeFaces.current().executeScript("hideBar();"); 
-//      showMonthlyStatistics = true;
-//    }
+
        }
 
+    public List<ProfileDataBean> getProfileDataBean() {
+        return profileDataBean;
+    }
 
+    public void setProfileDataBean(List<ProfileDataBean> profileDataBean) {
+        this.profileDataBean = profileDataBean;
+    }
 
-
+    private void createProfileBeans(List<ProfileData> profileDataList) {
+   DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+   for(int i=0;i<profileDataList.size();i++){
+   ProfileDataBean tmp = new ProfileDataBean();
+    Date date = new Date(profileDataList.get(i).getOldTimestamp()*1000);
+    tmp.setOldTimestamp(dateFormat.format(date));
+    tmp.setDifSpeed(String.format("%.2f", profileDataList.get(i).getDifSpeed())+"%");
+    tmp.setDifCount(profileDataList.get(i).getDifCount().toString()+"%");
+    tmp.setDifTime(profileDataList.get(i).getDifTime().toString()+"%");
+     profileDataBean.add(0,tmp);
+   }
+         
+        
+        ProfileDataBean currentDate = new ProfileDataBean();
+       Date date = new Date(dataRT.getTimestamp()*1000);
+       currentDate.setOldTimestamp(dateFormat.format(date));
+       currentDate.setDifSpeed(String.format("%.2f", dataRT.getSpeed()));
+       currentDate.setDifCount(dataRT.getCount().toString());
+       currentDate.setDifTime(dataRT.getTime().toString());
+       profileDataBean.add(0,currentDate);
+    }
 }

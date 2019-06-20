@@ -48,7 +48,7 @@ private String currentDate;
         currentDate = dateFormat.format(cal.getTime());
         System.out.println(currentDate);
          Long timestamp = (Long) cal.getTimeInMillis()/1000;
-        timestamp = Long.parseLong("1559192400");
+        //timestamp = Long.parseLong("1559192400");
 //      Long timestampTo  = (Long) Utils.addDays(day, 1).getTime()/1000;
         paths = service.getAllPathsForRT(timestamp);
       //  paths = new ArrayList<>();
